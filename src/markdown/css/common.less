@@ -1,0 +1,188 @@
+@charset "utf-8";
+/*
+*Author zhaoxuhui
+*/
+.markdown-preview {
+  max-width: 960px;
+  margin: 0 auto!important;
+  ul {
+    list-style: none;
+    padding: 0 20px;
+    li {
+      position: relative;
+      &:after {
+        display: block;
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        position: absolute;
+        z-index: 99;
+        top: 7px;
+        left: -20px;
+        background: @content;
+      }
+    }
+  }
+
+  ol,
+  ul {
+    margin: 20px 0;
+    padding: 0 40px;
+    li {
+      font-size: 14px !important;
+      line-height: @line-height;
+      color: @title;
+      margin-bottom: 8px;
+      input[type="checkbox"] {
+        position: relative;
+        // transform: translateX(-40px);
+        &:after {
+          display: block;
+          content: "";
+          width: @line-height;
+          height: @line-height;
+          position: absolute;
+          z-index: 999;
+          background: #fff;
+          top: 0;
+          left: -30px;
+        }
+      }
+    }
+  }
+  hr {
+    color: @border;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid @border;
+    margin: 20px 0;
+    padding: 0;
+  }
+  del,
+  em,
+  strong {
+    display: inline-block;
+    margin: @margin;
+  }
+  blockquote {
+    position: relative;
+    background: @background;
+    padding: 6px 12px;
+    border-left: 5px solid @divider;
+    border-radius: 2px;
+    margin: @margin;
+  }
+  /*基本样式*/
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: @title;
+  }
+  h1 {
+    font-size: 28px;
+    border-bottom: 1px solid @border;
+    //text-align: center;
+  }
+  h2 {
+    font-size: 24px;
+  }
+  h3 {
+    font-size: 18px;
+  }
+  h4 {
+    font-size: 16px;
+  }
+  h5 {
+    font-size: 14px;
+  }
+  h6 {
+    font-size: 12px;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    /* border-bottom: 1px solid @border; */
+    padding: 8px 0;
+  }
+  p {
+    font-size: 14px !important;
+    color: @content;
+    margin: @margin;
+    line-height: @line-height;
+  }
+  img {
+    display: block;
+    max-width: 80%;
+    margin: 20px 0;
+  }
+  table {
+    width: 100%;
+    border: 1px solid @border;
+    border-bottom: 0;
+    background: #fff;
+    border-spacing: 0;
+    border-collapse: collapse;
+    margin: 20px 0;
+    tr {
+      -webkit-transition: background 0.1s;
+      transition: background 0.1s;
+      text-align: nav;
+
+    }
+    tr td,
+    tr th {
+      padding: 0 8px;
+      font-size: 14px;
+      line-height: 39px;
+      color: #333;
+      border-bottom: 1px solid @border;
+      cursor: default;
+    }
+    th {
+      background: #f8f8f9;
+      text-align: left;
+      font-weight: bold;
+    }
+    tr:nth-of-type(even) {
+      td {
+        background: #f8f8f9;
+      }
+    }
+    tr{
+      &:hover{
+        td{
+          background: #eaf5f6;
+        }
+      }
+    }
+    td,
+    th {
+      border: 1px solid @border;
+    }
+  }
+  input[type="checkbox"] {
+    display: inline-block;
+    border-radius: 0;
+    margin-right: 8px;
+  }
+  a {
+    text-decoration: none;
+    color: @primary;
+    font-size: 14px;
+    line-height: @line-height;
+  }
+}
+
+@media only screen and (min-width: 1600px ) {
+  .markdown-preview {
+    max-width: 60%;
+    margin: 0 auto !important;
+  }
+}
