@@ -25,9 +25,9 @@ export default {
       type : String,
       default : ''
     },
-    titleStyle:{
-      type:Object,
-      default(){
+    titleStyle : {
+      type : Object,
+      default() {
         return {}
       }
     },
@@ -36,8 +36,8 @@ export default {
       default : 'Light'
     },
     width : {// 宽度
-      type:[Number,String],
-      default:'auto'
+      type : [Number, String],
+      default : 'auto'
     },
     height : { // 高度
       type : Number,
@@ -57,9 +57,9 @@ export default {
       type : Number,
       default : 10000
     },
-    initialValue:{ // 初始化值
-      type:String,
-      default:''
+    initialValue : { // 初始化值
+      type : String,
+      default : ''
     }
   },
   data() {
@@ -96,7 +96,7 @@ export default {
         shift : true,
         fullscreen : true,
         print : true,
-        theme:true
+        theme : true
       },
       slideDown : false,
       themeName : 'Light',// 主题名称
@@ -114,31 +114,28 @@ export default {
       }
     },
     tools() {
-      const {allTools,toolbars} = this ;
-      return Object.assign(allTools,toolbars)
+      const {allTools, toolbars} = this;
+      return Object.assign(allTools, toolbars)
     }
   },
   mounted() {
-    this.$nextTick(()=>{
+    this.$nextTick(() => {
       this.$refs.textarea.focus();
     })
     this.init();
+    this.addListener();
   },
   methods : {
     init() {
       this.themeName = this.theme;
-      const {autoSave, interval,theme,initialValue} = this;
-      this.value = initialValue ;
+      const {autoSave, interval, theme, initialValue} = this;
+      this.value = initialValue;
       this.previewMarkdown = marked(initialValue, {
         sanitize : true
       });
       if (autoSave) {
         this.timerId = setInterval(() => {
-          this.$emit('on-save', {
-            markdownValue : this.value,
-            htmlValue : this.previewMarkdown,
-            theme
-          });
+          this.handleSave();
         }, interval)
       }
 
@@ -167,9 +164,9 @@ export default {
       this.scroll = side;
     },
     insertContent(str) { // 插入文本
-      const {preview} = this ;
-      if(preview===2){
-        return ;
+      const {preview} = this;
+      if (preview === 2) {
+        return;
       }
       this.lastInsert = str;
       const textareaDom = this.$refs.textarea;
@@ -333,10 +330,13 @@ export default {
     },
     save(e) { // 保存
       e.preventDefault();
+      this.handleSave();
+    },
+    handleSave() {
       this.$emit('on-save', {
         markdownValue : this.value,
         htmlValue : this.previewMarkdown,
-        theme:this.theme
+        theme : this.theme
       });
     },
     insertLine() { // 插入分割线
@@ -365,14 +365,24 @@ export default {
     print() { // 打印文件
       const dom = this.$refs.preview;
       Print(dom);
+    },
+    addListener() { // 事件监听，阻止保存
+      document.addEventListener('keydown', e => {
+        if (e.keyCode === 83 && e.metaKey) {
+          e.preventDefault();
+          this.handleSave();
+        }
+      })
     }
   },
   watch : {
     value() {
       clearTimeout(this.timeoutId);
-      this.previewMarkdown = marked(this.value, {
-        sanitize : true
-      });
+      this.timeoutId = setTimeout(() => {
+        this.previewMarkdown = marked(this.value, {
+          sanitize : true
+        });
+      }, 30)
       this.indexLenth = this.value.split('\n').length;
       const height_1 = this.indexLenth * 22;
       const height_2 = this.$refs.textarea.scrollHeight;

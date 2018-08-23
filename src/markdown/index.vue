@@ -104,7 +104,6 @@
         <textarea
           v-model="value"
           @keydown.tab="tab"
-          @keydown.meta.83="save"
           @keyup.enter="enter"
           @keyup.delete="onDelete"
           ref="textarea"
