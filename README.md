@@ -118,3 +118,19 @@ const config = {
 
 复制到新项目中，安装对应依赖 highlight.js和marked即可
 
+**关于二次开发后打包**
+
+```
+// 修改webpack.config.js
+
+  entry: './src/main.js', // main.js改为index.js
+  output: {
+    path: path.resolve(__dirname, './dist'),
+    publicPath: '/dist/',
+    filename: 'build.js', // 输出文件名改为index.js或其他
+    libraryTarget: 'umd',
+    library: 'markdown-vue',
+    umdNamedDefine: true
+  },
+
+```
