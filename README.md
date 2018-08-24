@@ -54,6 +54,7 @@ theme|String|代码块主题配置，共有四个值，分别为Light、Dark、O
 autoSave|Boolean|是否自动保存|true
 interval|Number|自动保存频率，单位毫秒|10000
 toolbars|Object|工具栏配置，具体功能详见工具栏功能配置表
+mode|Number|初始化显示模式 1 分屏显示 2 预览详情 3 全屏编辑
 
 ### 5.events
 

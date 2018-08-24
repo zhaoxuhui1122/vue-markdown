@@ -1,5 +1,11 @@
 <template lang="html">
-  <div :class="isFullscreen?'markdown fullscreen':'markdown' " ref="markdown" :style="{height:`${editorHeight}px`}">
+  <div
+    :class="isFullscreen?'markdown fullscreen':'markdown' "
+    ref="markdown"
+    :style="{height:`${editorHeight}px`}"
+    @mouseover="addListener"
+    @mouseout="removeListener"
+  >
     <!-- 头部工具栏 -->
     <ul class="markdown-toolbars">
       <li class="title" v-if="title" :style="{titleStyle}">{{title}}</li>
@@ -15,52 +21,52 @@
       <li v-if="tools.h1" name="标题1">
         <span @click="insertTitle(1)">h1</span>
       </li>
-      <li v-if="tools.h2"name="标题2">
+      <li v-if="tools.h2" name="标题2">
         <span @click="insertTitle(2)">h2</span>
       </li>
-      <li v-if="tools.h3"name="标题3">
+      <li v-if="tools.h3" name="标题3">
         <span @click="insertTitle(3)">h3</span>
       </li>
-      <li v-if="tools.h4"name="标题4">
+      <li v-if="tools.h4" name="标题4">
         <span @click="insertTitle(4)">h4</span>
       </li>
-      <li v-if="tools.h5"name="标题5">
+      <li v-if="tools.h5" name="标题5">
         <span @click="insertTitle(5)">h5</span>
       </li>
-      <li v-if="tools.h6"name="标题6">
+      <li v-if="tools.h6" name="标题6">
         <span @click="insertTitle(6)">h6</span>
       </li>
       <li v-if="tools.hr" name="分割线">
         <span @click="insertLine" class="iconfont icon-horizontal"></span>
       </li>
       <li v-if="tools.quote" name="引用">
-        <span @click="insertContent('\n>  ')" class="iconfont icon-quote"></span>
+        <span @click="insertQuote" class="iconfont icon-quote"></span>
       </li>
       <li v-if="tools.ul" name="无序列表">
-        <span @click="insertContent('-  ')" class="iconfont icon-ul"></span>
+        <span @click="insertUl" class="iconfont icon-ul"></span>
       </li>
       <li v-if="tools.ol" name="有序列表">
-        <span @click="insertContent('1. ')" class="iconfont icon-ol"></span>
+        <span @click="insertOl" class="iconfont icon-ol"></span>
       </li>
       <li v-if="tools.code" name="代码块">
         <span @click="insertCode" class="iconfont icon-code"></span>
       </li>
       <li v-if="tools.notChecked" name="未完成列表">
-        <span @click="insertContent('- [ ]  ')" class="iconfont icon-checked-false"></span>
+        <span @click="insertNotFinished" class="iconfont icon-checked-false"></span>
       </li>
       <li v-if="tools.checked" name="已完成列表">
-        <span @click="insertContent('- [x]  ')" class="iconfont icon-checked"></span>
+        <span @click="insertFinished" class="iconfont icon-checked"></span>
       </li>
       <li v-if="tools.link" name="链接">
-        <span @click="insertContent('\n[插入链接](https://github.com/coinsuper)')" class="iconfont icon-link"></span>
+        <span @click="insertLink" class="iconfont icon-link"></span>
       </li>
       <li v-if="tools.image" name="图片">
-        <span @click="insertContent('\n![image](https://noticejs.oss-cn-hangzhou.aliyuncs.com/%E6%9C%AA%E6%A0%87%E9%A2%98-3.jpg)')" class="iconfont icon-img"></span>
+        <span @click="insertImage" class="iconfont icon-img"></span>
       </li>
       <li v-if="tools.table" name="表格">
         <span
-        @click="insertContent(`\nheader 1 | header 2\n---|---\nrow 1 col 1 | row 1 col 2\nrow 2 col 1 | row 2 col 2\n\n`)"
-        class="iconfont icon-table"></span>
+          @click="insertTable"
+          class="iconfont icon-table"></span>
       </li>
       <li v-if="tools.print" name="打印">
         <span class="iconfont icon-dayin" @click="print"></span>
@@ -76,13 +82,13 @@
           </ul>
         </div>
       </li>
-      <li v-if="tools.shift&&preview===1" name="预览">
+      <li v-if="tools.shift&&preview==1" name="预览">
         <span @click="preview=2" class="iconfont icon-preview"></span>
       </li>
-      <li v-if="tools.shift&&preview===2" name="编辑">
+      <li v-if="tools.shift&&preview==2" name="编辑">
         <span @click="preview=3" class="iconfont icon-md"></span>
       </li>
-      <li v-if="tools.shift&&preview===3" name="分屏显示">
+      <li v-if="tools.shift&&preview==3" name="分屏显示">
         <span @click="preview=1" class="iconfont icon-group"></span>
       </li>
       <li class="empty"></li>
@@ -91,7 +97,7 @@
         <span @click="isFullscreen=!isFullscreen" class="iconfont icon-full-screen"></span>
       </li>
       <li v-if="tools.fullscreen&&isFullscreen" name="退出全屏">
-        <span  @click="isFullscreen=!isFullscreen" class="iconfont icon-exit-full-screen"></span>
+        <span @click="isFullscreen=!isFullscreen" class="iconfont icon-exit-full-screen"></span>
       </li>
     </ul>
     <!-- 编辑器 -->

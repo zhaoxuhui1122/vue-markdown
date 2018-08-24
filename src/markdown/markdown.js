@@ -25,7 +25,7 @@ export default {
       type : String,
       default : ''
     },
-    titleStyle : {
+    titleStyle : {// 标题样式
       type : Object,
       default() {
         return {}
@@ -60,6 +60,10 @@ export default {
     initialValue : { // 初始化值
       type : String,
       default : ''
+    },
+    mode : { // 模式 1 分屏显示 2 预览详情 3 全屏编辑
+      type : [Number, String],
+      default : 1
     }
   },
   data() {
@@ -123,13 +127,14 @@ export default {
       this.$refs.textarea.focus();
     })
     this.init();
-    this.addListener();
+    //this.addListener();
   },
   methods : {
     init() {
       this.themeName = this.theme;
-      const {autoSave, interval, theme, initialValue} = this;
+      const {autoSave, interval, theme, initialValue, mode} = this;
       this.value = initialValue;
+      this.preview = mode;
       this.previewMarkdown = marked(initialValue, {
         sanitize : true
       });
@@ -229,14 +234,6 @@ export default {
         range.select();
       }
     },
-    tab(e) { // 屏蔽teatarea tab默认事件
-      this.insertContent('    ', this);
-      if (e.preventDefault) {
-        e.preventDefault();
-      } else {
-        e.returnValue = false;
-      }
-    },
     insertLine() { // 插入分割线
       this.insertContent(`\n----\n`);
     },
@@ -250,6 +247,30 @@ export default {
         6 : '\n######  '
       };
       this.insertContent(titleLevel[level]);
+    },
+    insertQuote() { // 引用
+      this.insertContent('\n>  ');
+    },
+    insertUl() { // 无需列表
+      this.insertContent('-  ');
+    },
+    insertOl() { // 有序列表
+      this.insertContent('1. ');
+    },
+    insertFinished() { // 已完成列表
+      this.insertContent('- [x]  ');
+    },
+    insertNotFinished() { // 未完成列表
+      this.insertContent('- [ ]  ');
+    },
+    insertLink() { // 插入链接
+      this.insertContent('\n[插入链接](https://github.com/coinsuper)');
+    },
+    insertImage() { // 插入图片
+      this.insertContent('\n![image](https://noticejs.oss-cn-hangzhou.aliyuncs.com/%E6%9C%AA%E6%A0%87%E9%A2%98-3.jpg)');
+    },
+    insertTable() { // 插入表格
+      this.insertContent(`\nheader 1 | header 2\n---|---\nrow 1 col 1 | row 1 col 2\nrow 2 col 1 | row 2 col 2\n\n`);
     },
     insertCode() { // 插入code
       const textareaDom = this.$refs.textarea;
@@ -328,11 +349,19 @@ export default {
       };
       this.insertContent(titleLevel[level]);
     },
-    save(e) { // 保存
+    save(e) { // ctrl+s 保存
       e.preventDefault();
       this.handleSave();
     },
-    handleSave() {
+    tab(e) { // 屏蔽teatarea tab默认事件
+      this.insertContent('    ', this);
+      if (e.preventDefault) {
+        e.preventDefault();
+      } else {
+        e.returnValue = false;
+      }
+    },
+    handleSave() { // 保存操作
       this.$emit('on-save', {
         markdownValue : this.value,
         htmlValue : this.previewMarkdown,
@@ -367,12 +396,17 @@ export default {
       Print(dom);
     },
     addListener() { // 事件监听，阻止保存
-      document.addEventListener('keydown', e => {
-        if (e.keyCode === 83 && e.metaKey) {
-          e.preventDefault();
-          this.handleSave();
-        }
-      })
+      this.removeListener();
+      document.addEventListener('keydown',this.listener)
+    },
+    removeListener(){
+      document.removeEventListener('keydown',this.listener)
+    },
+    listener(e){
+      if (e.keyCode === 83 && e.metaKey) {
+        e.preventDefault();
+        this.handleSave();
+      }
     }
   },
   watch : {
