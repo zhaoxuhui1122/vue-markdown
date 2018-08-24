@@ -113,7 +113,6 @@ Print.prototype = {
     }
   }
 };
-window.Print = Print;
 
 export default function _Print(dom) {
   Print(dom);
