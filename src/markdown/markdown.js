@@ -403,9 +403,11 @@ export default {
       document.removeEventListener('keydown',this.listener)
     },
     listener(e){
-      if (e.keyCode === 83 && e.metaKey) {
-        e.preventDefault();
-        this.handleSave();
+      if (e.keyCode === 83) {
+        if( e.metaKey||e.ctrlKey){
+          e.preventDefault();
+          this.handleSave();
+        }
       }
     }
   },
