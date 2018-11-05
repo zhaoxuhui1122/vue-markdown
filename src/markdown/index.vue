@@ -76,7 +76,7 @@
       </li>
       <li name="导入本地文件" class="import-file" v-show="tools.importmd">
         <span class="iconfont icon-daoru"></span>
-        <input type="file" @change="importFile($event)">
+        <input type="file" @change="importFile($event)" accept="text/markdown">
       </li>
       <li name="保存到本地" v-show="tools.exportmd">
         <span class="iconfont icon-download" @click="exportMd"></span>

@@ -6,112 +6,112 @@ import Print from './js/print';
 hljs.initHighlightingOnLoad();
 
 marked.setOptions({
-  renderer : new marked.Renderer(),
-  gfm : true,
-  tables : true,
-  breaks : false,
-  pedantic : false,
-  sanitize : true,
-  smartLists : true,
-  highlight : function (code) {
+  renderer: new marked.Renderer(),
+  gfm: true,
+  tables: true,
+  breaks: false,
+  pedantic: false,
+  sanitize: true,
+  smartLists: true,
+  highlight: function (code) {
     return hljs.highlightAuto(code).value;
   }
 });
 
 export default {
-  name : 'markdown',
-  props : {
-    title : { // 标题
-      type : String,
-      default : ''
+  name: 'markdown',
+  props: {
+    title: { // 标题
+      type: String,
+      default: ''
     },
-    titleStyle : {// 标题样式
-      type : Object,
-      default() {
+    titleStyle: { // 标题样式
+      type: Object,
+      default () {
         return {}
       }
     },
-    theme : { // 默认主题
-      type : String,
-      default : 'Light'
+    theme: { // 默认主题
+      type: String,
+      default: 'Light'
     },
-    width : {// 宽度
-      type : [Number, String],
-      default : 'auto'
+    width: { // 宽度
+      type: [Number, String],
+      default: 'auto'
     },
-    height : { // 高度
-      type : Number,
-      default : 600
+    height: { // 高度
+      type: Number,
+      default: 600
     }, // 宽度
-    toolbars : { // 工具栏
-      type : Object,
-      default() {
+    toolbars: { // 工具栏
+      type: Object,
+      default () {
         return {};
       }
     },
-    autoSave : {// 是否自动保存
-      type : Boolean,
-      default : true
+    autoSave: { // 是否自动保存
+      type: Boolean,
+      default: true
     },
-    interval : { // 自动保存频率 单位：毫秒
-      type : Number,
-      default : 10000
+    interval: { // 自动保存频率 单位：毫秒
+      type: Number,
+      default: 10000
     },
-    initialValue : { // 初始化值
-      type : String,
-      default : ''
+    initialValue: { // 初始化值
+      type: String,
+      default: ''
     },
-    mode : { // 模式 1 分屏显示 2 预览详情 3 全屏编辑
-      type : [Number, String],
-      default : 1
+    mode: { // 模式 1 分屏显示 2 预览详情 3 全屏编辑
+      type: [Number, String],
+      default: 1
     }
   },
   data() {
     return {
-      value : '', // 输入框内容
-      timeoutId : null,
-      hljsInit : null,
-      indexLenth : 1,
-      previewMarkdown : '',
-      preview : 1, // 是否是预览状态
-      isFullscreen : false,
-      scrollHeight : null,
-      scroll : 'markdown',// 哪个半栏在滑动
-      allTools : { // 显示隐藏的工具栏
-        strong : true,
-        italic : true,
-        overline : true,
-        h1 : true,
-        h2 : true,
-        h3 : true,
-        h4 : false,
-        h5 : false,
-        h6 : false,
-        hr : true,
-        quote : true,
-        ul : true,
-        ol : true,
-        code : true,
-        link : true,
-        image : true,
-        table : true,
-        checked : true,
-        notChecked : true,
-        shift : true,
-        fullscreen : true,
-        print : false,
+      value: '', // 输入框内容
+      timeoutId: null,
+      hljsInit: null,
+      indexLenth: 1,
+      previewMarkdown: '',
+      preview: 1, // 是否是预览状态
+      isFullscreen: false,
+      scrollHeight: null,
+      scroll: 'markdown', // 哪个半栏在滑动
+      allTools: { // 显示隐藏的工具栏
+        strong: true,
+        italic: true,
+        overline: true,
+        h1: true,
+        h2: true,
+        h3: true,
+        h4: false,
+        h5: false,
+        h6: false,
+        hr: true,
+        quote: true,
+        ul: true,
+        ol: true,
+        code: true,
+        link: true,
+        image: true,
+        table: true,
+        checked: true,
+        notChecked: true,
+        shift: true,
+        fullscreen: true,
+        print: false,
         theme: true,
-        exportmd:true,
-        importmd:true
+        exportmd: true,
+        importmd: true
       },
-      slideDown : false,
-      themeName : 'Light',// 主题名称
-      lastInsert : '',
-      timerId : null,// 定时器id
+      slideDown: false,
+      themeName: 'Light', // 主题名称
+      lastInsert: '',
+      timerId: null, // 定时器id
 
     };
   },
-  computed : {
+  computed: {
     editorHeight() {
       if (this.isFullscreen) {
         return window.innerHeight;
@@ -120,7 +120,10 @@ export default {
       }
     },
     tools() {
-      const {allTools, toolbars} = this;
+      const {
+        allTools,
+        toolbars
+      } = this;
       return Object.assign(allTools, toolbars)
     }
   },
@@ -132,14 +135,20 @@ export default {
     this.init();
     //this.addListener();
   },
-  methods : {
+  methods: {
     init() {
       this.themeName = this.theme;
-      const {autoSave, interval, theme, initialValue, mode} = this;
+      const {
+        autoSave,
+        interval,
+        theme,
+        initialValue,
+        mode
+      } = this;
       this.value = initialValue;
       this.preview = mode;
       this.previewMarkdown = marked(initialValue, {
-        sanitize : true
+        sanitize: true
       });
       if (autoSave) {
         this.timerId = setInterval(() => {
@@ -168,11 +177,13 @@ export default {
         markdownContent.scrollTop = parseInt((previewScrollTop / previewScrollHeight) * markdownScrollHeight);
       }
     },
-    mousescrollSide(side) {// 设置究竟是哪个半边在主动滑动
+    mousescrollSide(side) { // 设置究竟是哪个半边在主动滑动
       this.scroll = side;
     },
     insertContent(str) { // 插入文本
-      const {preview} = this;
+      const {
+        preview
+      } = this;
       if (preview === 2) {
         return;
       }
@@ -194,7 +205,7 @@ export default {
       if (document.selection) {
         textDom.focus();
         let selectRange = document.selection.createRange();
-        selectRange.moveStart('character', - this.value.length);
+        selectRange.moveStart('character', -this.value.length);
         cursorPos = selectRange.text.length;
       } else if (textDom.selectionStart || textDom.selectionStart == '0') {
         cursorPos = textDom.selectionStart;
@@ -242,12 +253,12 @@ export default {
     },
     insertTitle(level) { // 插入标题
       const titleLevel = {
-        1 : '\n#  ',
-        2 : '\n##  ',
-        3 : '\n###  ',
-        4 : '\n####  ',
-        5 : '\n#####  ',
-        6 : '\n######  '
+        1: '\n#  ',
+        2: '\n##  ',
+        3: '\n###  ',
+        4: '\n####  ',
+        5: '\n#####  ',
+        6: '\n######  '
       };
       this.insertContent(titleLevel[level]);
     },
@@ -343,12 +354,12 @@ export default {
     },
     insertTitle(level) { // 插入标题
       const titleLevel = {
-        1 : '#  ',
-        2 : '##  ',
-        3 : '###  ',
-        4 : '####  ',
-        5 : '#####  ',
-        6 : '######  '
+        1: '#  ',
+        2: '##  ',
+        3: '###  ',
+        4: '####  ',
+        5: '#####  ',
+        6: '######  '
       };
       this.insertContent(titleLevel[level]);
     },
@@ -366,23 +377,25 @@ export default {
     },
     handleSave() { // 保存操作
       this.$emit('on-save', {
-        markdownValue : this.value,
-        htmlValue : this.previewMarkdown,
-        theme : this.theme
+        markdownValue: this.value,
+        htmlValue: this.previewMarkdown,
+        theme: this.theme
       });
     },
     insertLine() { // 插入分割线
       this.insertContent(`\n----\n`);
     },
     toggleSlideDown() { // 显示主题选项
-      this.slideDown = ! this.slideDown;
+      this.slideDown = !this.slideDown;
     },
     setThemes(name) { // 设置主题
       this.themeName = name;
       this.slideDown = false;
     },
     enter(e) { // 回车事件
-      const {lastInsert} = this;
+      const {
+        lastInsert
+      } = this;
       const list = ['-  ', '1. ', '- [ ]  ', '- [x]  ']
       if (list.includes(lastInsert)) {
         this.insertContent(lastInsert);
@@ -400,14 +413,14 @@ export default {
     },
     addListener() { // 事件监听，阻止保存
       this.removeListener();
-      document.addEventListener('keydown',this.listener)
+      document.addEventListener('keydown', this.listener)
     },
-    removeListener(){
-      document.removeEventListener('keydown',this.listener)
+    removeListener() {
+      document.removeEventListener('keydown', this.listener)
     },
-    listener(e){
+    listener(e) {
       if (e.keyCode === 83) {
-        if( e.metaKey||e.ctrlKey){
+        if (e.metaKey || e.ctrlKey) {
           e.preventDefault();
           this.handleSave();
         }
@@ -415,42 +428,48 @@ export default {
     },
     importFile(e) { // 导入文件
       const file = e.target.files[0];
-      if (! file) {
-          return;
+      if (!file) {
+        return;
       }
-      const {type} = file;
+      const {
+        type
+      } = file;
       if (type !== 'text/markdown') {
-          this.$Notice.error('文件格式有误!');
-          return;
+        alert('文件格式有误');
+        return;
       }
       const reader = new FileReader();
-      reader.readAsText(file, {encoding : 'utf-8'});
+      reader.readAsText(file, {
+        encoding: 'utf-8'
+      });
       reader.onload = () => {
-          this.value = reader.result;
-          e.target.value = '';
+        this.value = reader.result;
+        e.target.value = '';
       }
     },
     exportMd() { // 导出文件到本地
-      const { value } = this;
+      const {
+        value
+      } = this;
       var pom = document.createElement('a');
       pom.setAttribute('href', 'data:text/plain;charset=UTF-8,' + encodeURIComponent(value));
       pom.setAttribute('download', '未命名.md');
       pom.style.display = 'none';
       if (document.createEvent) {
-          var event = document.createEvent('MouseEvents');
-          event.initEvent('click', true, true);
-          pom.dispatchEvent(event);
+        var event = document.createEvent('MouseEvents');
+        event.initEvent('click', true, true);
+        pom.dispatchEvent(event);
       } else {
-          pom.click();
+        pom.click();
       }
     }
   },
-  watch : {
+  watch: {
     value() {
       clearTimeout(this.timeoutId);
       this.timeoutId = setTimeout(() => {
         this.previewMarkdown = marked(this.value, {
-          sanitize : true
+          sanitize: true
         });
       }, 30)
       this.indexLenth = this.value.split('\n').length;
