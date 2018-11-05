@@ -2,11 +2,11 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
-  entry: './src/main.js',
+  entry: './src/main.js', // 打包为npm包时将此处修改为 ./src/index.js
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    filename: 'build.js',
+    filename: 'build.js',// 打包为npm包时将此处修改为 index.js
     libraryTarget: 'umd',
     library: 'markdown-vue',
     umdNamedDefine: true

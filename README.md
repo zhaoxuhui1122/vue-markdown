@@ -1,22 +1,14 @@
 # vue-Markdown编辑器
+
+[在线示例地址](http://47.99.49.57/markdown/)
+
 ### 1.简介
 
 **一款使用marked和highlight.js开发的一款markdown编辑器，目前只支持在vue项目中使用。
 编辑器涵盖了常用的markdown编辑器功能，工具栏可自定义配置，也可进行二次开发。**
 
-
-#### 提供的常用功能
-![image](https://noticejs.oss-cn-hangzhou.aliyuncs.com/gongneng.jpg)
-
-#### 多种主题，分别支持 Light、Dark（vsCode）、OneDark、GitHub四种主题风格
-
-![image](https://noticejs.oss-cn-hangzhou.aliyuncs.com/theme.jpg)
-
-#### 一键打印
-
-![image](https://noticejs.oss-cn-hangzhou.aliyuncs.com/print.jpg)
-
-
+**效果**
+![image](http://smalleyes.oss-cn-shanghai.aliyuncs.com/WechatIMG586.png)
 
 ### 2.安装
 
@@ -86,14 +78,14 @@ table |表格|是
 checked|已完成列表|是
 notChecked |未完成列表|是
 shift|预览|是
-print |打印|是
+print |打印|否
 theme|主题切换|是
 fullscreen |全屏|是
-
+exportmd|导出为*.md文件|是
+importmd|倒入本地*.md文件|是
 
 ### 7.其他说明
 **关于保存时返回值**
-
 
 ```
     markdownValue // 编辑器输入的原始内容
@@ -141,3 +133,8 @@ v0.7.0
 
 1.修复主题无法更新的问题
 2.修复文档初始化值无法动态切换的问题
+
+v0.8.0
+1.新增md文件导出和读取功能
+2.修改预览部分样式
+3.修改头部菜单样式
