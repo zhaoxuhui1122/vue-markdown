@@ -82,7 +82,7 @@ print |打印|否
 theme|主题切换|是
 fullscreen |全屏|是
 exportmd|导出为*.md文件|是
-importmd|倒入本地*.md文件|是
+importmd|导入本地*.md文件|是
 
 ### 7.其他说明
 **关于保存时返回值**
