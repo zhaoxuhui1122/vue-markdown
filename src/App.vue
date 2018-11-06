@@ -7,8 +7,8 @@
 </template>
 
 <script>
-// import MarkDown from './markdown/index' // 开发文件
-import MarkDown from '../dist' // 引入打包好的文件
+import MarkDown from './markdown/index' // 开发文件
+// import MarkDown from '../dist' // 引入打包好的文件
 export default {
   name: 'app',
   components: {
