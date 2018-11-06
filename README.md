@@ -2,6 +2,9 @@
 
 [在线示例地址](http://47.99.49.57/markdown/)
 
+GitHub :[ https://github.com/coinsuper/vue-markdown]( https://github.com/coinsuper/vue-markdown)
+
+
 ### 1.简介
 
 **一款使用marked和highlight.js开发的一款markdown编辑器，目前只支持在vue项目中使用。
@@ -82,7 +85,7 @@ print |打印|否
 theme|主题切换|是
 fullscreen |全屏|是
 exportmd|导出为*.md文件|是
-importmd|倒入本地*.md文件|是
+importmd|导入本地*.md文件|是
 
 ### 7.其他说明
 **关于保存时返回值**
