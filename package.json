@@ -1,7 +1,7 @@
 {
   "name": "vue-meditor",
   "description": "一款使用marked和highlight.js开发的一款markdown编辑器",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "author": "zhaoxuhui<1258835133@qq.com>",
   "license": "MIT",
   "main": "dist/index.js",
@@ -12,7 +12,8 @@
   ],
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "build:npm": "cross-env NODE_ENV=npm webpack --progress --hide-modules"
   },
   "dependencies": {
     "highlight.js": "^9.12.0",

@@ -465,6 +465,7 @@ export default {
     }
   },
   watch: {
+
     value() {
       clearTimeout(this.timeoutId);
       this.timeoutId = setTimeout(() => {
@@ -477,6 +478,9 @@ export default {
       const height_2 = this.$refs.textarea.scrollHeight;
       const height_3 = this.$refs.preview.scrollHeight;
       this.scrollHeight = Math.max(height_1, height_2, height_3);
+    },
+    initialValue() {
+      this.value = this.initialValue;
     }
   },
   destroyed() { // 销毁时清除定时器

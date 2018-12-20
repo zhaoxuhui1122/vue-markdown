@@ -1,12 +1,13 @@
 var path = require('path')
 var webpack = require('webpack')
+const NODE_ENV = process.env.NODE_ENV;
 
 module.exports = {
-  entry: './src/index.js', // 打包为npm包时将此处修改为 ./src/index.js
+  entry: NODE_ENV==='npm'?'./src/index.js':'./src/main.js',
   output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
-    filename: 'index.js',// 打包为npm包时将此处修改为 index.js
+    path: path.resolve(__dirname, NODE_ENV==='npm'?'./build':'./dist'),
+    publicPath:NODE_ENV==='npm'? '/build/':'/dist/',
+    filename: NODE_ENV==='npm'?'index.js':'build.js',
     libraryTarget: 'umd',
     library: 'markdown-vue',
     umdNamedDefine: true
