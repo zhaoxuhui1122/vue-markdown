@@ -2,12 +2,7 @@
   <div id="app">
     <div class="container">
       <h1>vue-markdown编辑器组件</h1>
-      <a target="_blank" href="https://zhaoxuhui1122.github.io/vue-markdown/">使用文档</a>
-      <ul>
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul>
+      <a target="_blank" href="https://github.com/zhaoxuhui1122/vue-markdown">使用文档</a>
       <div class="content">
         <mark-down @on-save="save" theme="OneDark" :initialValue="initialValue"></mark-down>
       </div>
@@ -63,7 +58,7 @@
     }
 
     a {
-      display: block;
+      display: inline-block;
       background-color: #f8f8f9;
       border-radius: 4px;
       padding: 8px 16px;
