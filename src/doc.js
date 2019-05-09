@@ -1,4 +1,4 @@
-# vue-Markdown编辑器
+export default `# vue-Markdown编辑器
 
 [在线示例地址](https://zhaoxuhui1122.github.io/vue-markdown/)
 
@@ -17,18 +17,18 @@ GitHub :[https://github.com/zhaoxuhui1122/vue-markdown]( https://github.com/zhao
 
 ### 2.安装
 
-```
+\`\`\`
 npm i -S vue-meditor
 
 或
 
 直接复制对应的组件到项目目录内 （推荐）
-```
+\`\`\`
 
 ### 3.在项目中使用
 
 
-```
+\`\`\`
 import MarkDown from 'vue-meditor'
 
 ...
@@ -40,7 +40,7 @@ components:{
 <template>
     <mark-down/>
 </template>
-```
+\`\`\`
 
 ###  4.props
 
@@ -94,40 +94,40 @@ importmd|导入本地*.md文件|是
 ### 7.其他说明
 **关于保存时返回值**
 
-```
+\`\`\`
     value // 编辑器输入的原始内容
     html // 右侧现实的问转义后的内容
     theme // 保存时的主题名字
-```
+\`\`\`
 **标题配置**
 
-```
+\`\`\`
 支持配置编辑器名称，提供了name=title的slot插槽
-```
+\`\`\`
 
 
 **工具栏配置**
 
-```
+\`\`\`
 // 例：
 const config = {
     print:false // 隐藏掉打印功能
 }
 <MarkDown :toolbars="config"/>
-```
+\`\`\`
 **优化代码体积**
 
 
-```
+\`\`\`
 项目中为了达到代码高亮显示，需要用到highlight.js,
 由于highlight.js体积过于庞大，项目中按需加载了部分常用的程序语言，
 可根据需求自行配置，配置目录位于/markdown/js/hljs内
-```
+\`\`\`
 
 
 ### 更新日志
 
-**v1.2.0**
+**v1.0.0**
 1. 优化代码体积，按需加载highlight.js，较少了三分之二的代码体积
 2. 新增图片粘贴功能
 3. 增加图片预览功能
@@ -150,3 +150,4 @@ const config = {
 2. 修复文档初始化值无法动态切换的问题
 
 
+`

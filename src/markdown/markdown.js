@@ -1,17 +1,18 @@
-import hljs from 'highlight.js';
+import hljs from './js/hljs';
 import marked from 'marked';
-import range from './js/range';
-import Print from './js/print';
+import {saveFile} from "./js/utils";
+import defaultTools from './js/tools';
 
 hljs.initHighlightingOnLoad();
+const renderer = new marked.Renderer();
 
 marked.setOptions({
-  renderer: new marked.Renderer(),
+  renderer,
   gfm: true,
   tables: true,
   breaks: false,
   pedantic: false,
-  sanitize: true,
+  sanitize: false,
   smartLists: true,
   highlight: function (code) {
     return hljs.highlightAuto(code).value;
@@ -21,182 +22,155 @@ marked.setOptions({
 export default {
   name: 'markdown',
   props: {
-    title: { // 标题
-      type: String,
-      default: ''
-    },
-    titleStyle: { // 标题样式
-      type: Object,
-      default () {
-        return {}
-      }
-    },
+    initialValue: String,// 初始化内容
     theme: { // 默认主题
       type: String,
       default: 'Light'
     },
-    width: { // 宽度
+    width: { // 初始化宽度
       type: [Number, String],
       default: 'auto'
     },
-    height: { // 高度
+    height: { // 初始化高度
       type: Number,
       default: 600
     }, // 宽度
     toolbars: { // 工具栏
       type: Object,
-      default () {
+      default() {
         return {};
       }
     },
-    autoSave: { // 是否自动保存
+    autoSave: {// 是否自动保存
       type: Boolean,
       default: true
     },
-    interval: { // 自动保存频率 单位：毫秒
+    interval: {// 自动保存间隔 mm
       type: Number,
-      default: 10000
+      default: 100000
     },
-    initialValue: { // 初始化值
+    exportFileName: {// 默认导出文件名称
       type: String,
-      default: ''
-    },
-    mode: { // 模式 1 分屏显示 2 预览详情 3 全屏编辑
-      type: [Number, String],
-      default: 1
+      default: '未命名文件'
     }
   },
   data() {
     return {
       value: '', // 输入框内容
       timeoutId: null,
-      hljsInit: null,
-      indexLenth: 1,
-      previewMarkdown: '',
+      indexLenth: 100,
+      html: '',
       preview: 1, // 是否是预览状态
-      isFullscreen: false,
+      isFullscreen: false,// 是否是全屏
       scrollHeight: null,
       scroll: 'markdown', // 哪个半栏在滑动
-      allTools: { // 显示隐藏的工具栏
-        strong: true,
-        italic: true,
-        overline: true,
-        h1: true,
-        h2: true,
-        h3: true,
-        h4: false,
-        h5: false,
-        h6: false,
-        hr: true,
-        quote: true,
-        ul: true,
-        ol: true,
-        code: true,
-        link: true,
-        image: true,
-        table: true,
-        checked: true,
-        notChecked: true,
-        shift: true,
-        fullscreen: true,
-        print: false,
-        theme: true,
-        exportmd: true,
-        importmd: true
-      },
-      slideDown: false,
       themeName: 'Light', // 主题名称
       lastInsert: '',
       timerId: null, // 定时器id
-
+      themeSlideDown: false,
+      imgs: [],
+      scrolling: true,// 同步滚动
+      editorHeight: this.height,
+      editorWidth: this.width,
+      previewImgModal: false,
+      previewImgSrc: '',
+      previewImgMode: ''
     };
   },
   computed: {
-    editorHeight() {
-      if (this.isFullscreen) {
-        return window.innerHeight;
-      } else {
-        return this.height;
-      }
-    },
     tools() {
-      const {
-        allTools,
-        toolbars
-      } = this;
-      return Object.assign(allTools, toolbars)
+      const {toolbars = {}} = this;
+      return {
+        ...defaultTools,
+        ...toolbars
+      }
     }
   },
   mounted() {
-
-    this.$nextTick(() => {
-      this.$refs.textarea.focus();
-    })
-    this.init();
-    //this.addListener();
-  },
-  methods: {
-    init() {
-      this.themeName = this.theme;
-      const {
-        autoSave,
-        interval,
-        theme,
-        initialValue,
-        mode
-      } = this;
-      this.value = initialValue;
-      this.preview = mode;
-      this.previewMarkdown = marked(initialValue, {
-        sanitize: true
-      });
-      if (autoSave) {
+    setTimeout(() => {
+      this.value = this.initialValue;
+      const textarea = this.$refs.textarea;
+      textarea.focus();
+      textarea.addEventListener('keydown', e => {
+        if (e.keyCode === 83) {
+          if (e.metaKey || e.ctrlKey) {
+            e.preventDefault();
+            this.handleSave();
+          }
+        }
+      })
+      textarea.addEventListener('paste', this.handlePaste);
+      if (this.autoSave) {
         this.timerId = setInterval(() => {
           this.handleSave();
-        }, interval)
+        }, this.interval);
       }
-
+    }, 20)
+  },
+  methods: {
+    handlePaste(e) { // 粘贴图片
+      const {clipboardData = {}} = e;
+      const {types = [], items} = clipboardData;
+      let item = null;
+      for (let i = 0; i < types.length; i++) {
+        if (types[i] === 'Files') {
+          item = items[i];
+          break;
+        }
+      }
+      if (item) {
+        const file = item.getAsFile();
+        if (/image/ig.test(file.type)) {
+          this.$emit('on-paste-image', file);
+          e.preventDefault();
+        }
+      }
     },
     markdownScroll() {
+      const {scrolling} = this;
+      if (!scrolling) {
+        return;
+      }
       if (this.scroll === 'markdown') {
         const markdownContent = this.$refs.markdownContent;
         const preview = this.$refs.preview;
         const markdownScrollHeight = markdownContent.scrollHeight;
         const markdownScrollTop = markdownContent.scrollTop;
         const previewScrollHeight = preview.scrollHeight;
-        preview.scrollTop = parseInt((markdownScrollTop / markdownScrollHeight) * previewScrollHeight);
+        preview.scrollTop = parseInt(markdownScrollTop / markdownScrollHeight * previewScrollHeight, 0);
       }
     },
     previewScroll() {
+      const {scrolling} = this;
+      if (!scrolling) {
+        return;
+      }
       if (this.scroll === 'preview') {
         const markdownContent = this.$refs.markdownContent;
         const preview = this.$refs.preview;
         const markdownScrollHeight = markdownContent.scrollHeight;
         const previewScrollHeight = preview.scrollHeight;
         const previewScrollTop = preview.scrollTop;
-        markdownContent.scrollTop = parseInt((previewScrollTop / previewScrollHeight) * markdownScrollHeight);
+        markdownContent.scrollTop = parseInt(previewScrollTop / previewScrollHeight * markdownScrollHeight, 0);
       }
     },
     mousescrollSide(side) { // 设置究竟是哪个半边在主动滑动
       this.scroll = side;
     },
-    insertContent(str) { // 插入文本
-      const {
-        preview
-      } = this;
+    insertContent(initStr) { // 插入文本
+      const {preview} = this;
       if (preview === 2) {
         return;
       }
-      this.lastInsert = str;
-      const textareaDom = this.$refs.textarea;
+      this.lastInsert = initStr;
       const point = this.getCursortPosition();
       const lastChart = this.value.substring(point - 1, point);
       const lastFourCharts = this.value.substring(point - 4, point);
-      if (lastChart != '\n' && this.value != '' && lastFourCharts != '    ') {
-        str = '\n' + str;
+      if (lastChart !== '\n' && this.value !== '' && lastFourCharts !== '    ') {
+        const str = '\n' + initStr;
         this.insertAfterText(str);
       } else {
-        this.insertAfterText(str);
+        this.insertAfterText(initStr);
       }
     },
     getCursortPosition() { // 获取光标位置
@@ -207,7 +181,7 @@ export default {
         let selectRange = document.selection.createRange();
         selectRange.moveStart('character', -this.value.length);
         cursorPos = selectRange.text.length;
-      } else if (textDom.selectionStart || textDom.selectionStart == '0') {
+      } else if (textDom.selectionStart || parseInt(textDom.selectionStart, 0) === 0) {
         cursorPos = textDom.selectionStart;
       }
       return cursorPos;
@@ -220,7 +194,7 @@ export default {
         selectRange = document.selection.createRange();
         selectRange.text = value;
         textDom.focus();
-      } else if (textDom.selectionStart || textDom.selectionStart == '0') {
+      } else if (textDom.selectionStart || parseInt(textDom.selectionStart, 0) === 0) {
         const startPos = textDom.selectionStart;
         const endPos = textDom.selectionEnd;
         const scrollTop = textDom.scrollTop;
@@ -241,26 +215,12 @@ export default {
         textDom.focus();
         textDom.setSelectionRange(position, position);
       } else if (textDom.createTextRange) {
-        var range = textDom.createTextRange();
+        let range = textDom.createTextRange();
         range.collapse(true);
         range.moveEnd('character', position);
         range.moveStart('character', position);
         range.select();
       }
-    },
-    insertLine() { // 插入分割线
-      this.insertContent(`\n----\n`);
-    },
-    insertTitle(level) { // 插入标题
-      const titleLevel = {
-        1: '\n#  ',
-        2: '\n##  ',
-        3: '\n###  ',
-        4: '\n####  ',
-        5: '\n#####  ',
-        6: '\n######  '
-      };
-      this.insertContent(titleLevel[level]);
     },
     insertQuote() { // 引用
       this.insertContent('\n>  ');
@@ -278,75 +238,69 @@ export default {
       this.insertContent('- [ ]  ');
     },
     insertLink() { // 插入链接
-      this.insertContent('\n[插入链接](https://github.com/coinsuper)');
+      this.insertContent('\n[插入链接](href)');
     },
     insertImage() { // 插入图片
-      this.insertContent('\n![image](https://noticejs.oss-cn-hangzhou.aliyuncs.com/%E6%9C%AA%E6%A0%87%E9%A2%98-3.jpg)');
+      this.insertContent('\n![image](imgUrl)');
     },
     insertTable() { // 插入表格
-      this.insertContent(`\nheader 1 | header 2\n---|---\nrow 1 col 1 | row 1 col 2\nrow 2 col 1 | row 2 col 2\n\n`);
+      this.insertContent('\nheader 1 | header 2\n---|---\nrow 1 col 1 | row 1 col 2\nrow 2 col 1 | row 2 col 2\n\n');
     },
     insertCode() { // 插入code
-      const textareaDom = this.$refs.textarea;
       const point = this.getCursortPosition();
       const lastChart = this.value.substring(point - 1, point);
       this.insertContent('\n```\n\n```');
-      if (lastChart != '\n' && this.value != '') {
+      if (lastChart !== '\n' && this.value !== '') {
         this.setCaretPosition(point + 5);
       } else {
         this.setCaretPosition(point + 5);
       }
     },
     insertStrong() { // 粗体
-      const textareaDom = this.$refs.textarea;
       const point = this.getCursortPosition();
       const lastChart = this.value.substring(point - 1, point);
       this.insertContent('****');
-      if (lastChart != '\n' && this.value != '') {
+      if (lastChart !== '\n' && this.value !== '') {
         this.setCaretPosition(point + 2);
       } else {
         this.setCaretPosition(point + 2);
       }
     },
     insertItalic() { // 斜体
-      const textareaDom = this.$refs.textarea;
       const point = this.getCursortPosition();
       const lastChart = this.value.substring(point - 1, point);
       this.insertContent('**');
-      if (lastChart != '\n' && this.value != '') {
+      if (lastChart !== '\n' && this.value !== '') {
         this.setCaretPosition(point + 1);
       } else {
         this.setCaretPosition(point + 1);
       }
     },
     insertBg() { // 背景色
-      const textareaDom = this.$refs.textarea;
       const point = this.getCursortPosition();
       const lastChart = this.value.substring(point - 1, point);
       this.insertContent('====');
-      if (lastChart != '\n' && this.value != '') {
+      if (lastChart !== '\n' && this.value !== '') {
         this.setCaretPosition(point + 5);
       } else {
         this.setCaretPosition(point + 5);
       }
     },
     insertUnderline() { // 下划线
-      const textareaDom = this.$refs.textarea;
       const point = this.getCursortPosition();
       const lastChart = this.value.substring(point - 1, point);
       this.insertContent('<u></u>');
-      if (lastChart != '\n' && this.value != '') {
+      if (lastChart !== '\n' && this.value !== '') {
         this.setCaretPosition(point + 3);
       } else {
         this.setCaretPosition(point + 5);
       }
     },
     insertOverline() { // overline
-      const textareaDom = this.$refs.textarea;
       const point = this.getCursortPosition();
       const lastChart = this.value.substring(point - 1, point);
       this.insertContent('~~~~');
-      if (lastChart != '\n' && this.value != '') {
+      if (lastChart !== '\n' && this.value !== '') {
         this.setCaretPosition(point + 2);
       } else {
         this.setCaretPosition(point + 2);
@@ -363,10 +317,6 @@ export default {
       };
       this.insertContent(titleLevel[level]);
     },
-    save(e) { // ctrl+s 保存
-      e.preventDefault();
-      this.handleSave();
-    },
     tab(e) { // 屏蔽teatarea tab默认事件
       this.insertContent('    ', this);
       if (e.preventDefault) {
@@ -376,26 +326,25 @@ export default {
       }
     },
     handleSave() { // 保存操作
+      const {value, html, themeName} = this;
       this.$emit('on-save', {
-        markdownValue: this.value,
-        htmlValue: this.previewMarkdown,
-        theme: this.theme
+        theme: themeName,
+        value,
+        html
       });
     },
     insertLine() { // 插入分割线
-      this.insertContent(`\n----\n`);
+      this.insertContent('\n----\n');
     },
     toggleSlideDown() { // 显示主题选项
       this.slideDown = !this.slideDown;
     },
     setThemes(name) { // 设置主题
       this.themeName = name;
-      this.slideDown = false;
+      this.themeSlideDown = false;
     },
-    enter(e) { // 回车事件
-      const {
-        lastInsert
-      } = this;
+    enter() { // 回车事件
+      const {lastInsert} = this;
       const list = ['-  ', '1. ', '- [ ]  ', '- [x]  ']
       if (list.includes(lastInsert)) {
         this.insertContent(lastInsert);
@@ -403,84 +352,81 @@ export default {
     },
     onDelete() { // 删除时,以回车为界分割，如果数组最后一个元素为''时，将行一次插入的共嗯那个置为空，避免回车时再次插入
       const lines = this.value.split('\n');
-      if (lines[lines.length - 1] == '') {
+      if (lines[lines.length - 1] === '') {
         this.lastInsert = '';
       }
     },
-    print() { // 打印文件
-      const dom = this.$refs.preview;
-      Print(dom);
+    exportMd() { // 导出为.md格式
+      saveFile(this.value, this.exportFileName + '.md');
     },
-    addListener() { // 事件监听，阻止保存
-      this.removeListener();
-      document.addEventListener('keydown', this.listener)
-    },
-    removeListener() {
-      document.removeEventListener('keydown', this.listener)
-    },
-    listener(e) {
-      if (e.keyCode === 83) {
-        if (e.metaKey || e.ctrlKey) {
-          e.preventDefault();
-          this.handleSave();
-        }
-      }
-    },
-    importFile(e) { // 导入文件
+    importFile(e) {// 导入本地文件
       const file = e.target.files[0];
       if (!file) {
         return;
       }
-      const {
-        type
-      } = file;
+      const {type} = file;
       if (type !== 'text/markdown') {
-        alert('文件格式有误');
+        this.$Notice.error('文件格式有误!');
         return;
       }
       const reader = new FileReader();
-      reader.readAsText(file, {
-        encoding: 'utf-8'
-      });
+      reader.readAsText(file, {encoding: 'utf-8'});
       reader.onload = () => {
         this.value = reader.result;
         e.target.value = '';
       }
     },
-    exportMd() { // 导出文件到本地
-      const {
-        value
-      } = this;
-      var pom = document.createElement('a');
-      pom.setAttribute('href', 'data:text/plain;charset=UTF-8,' + encodeURIComponent(value));
-      pom.setAttribute('download', '未命名.md');
-      pom.style.display = 'none';
-      if (document.createEvent) {
-        var event = document.createEvent('MouseEvents');
-        event.initEvent('click', true, true);
-        pom.dispatchEvent(event);
-      } else {
-        pom.click();
+    addImageClickLintener() { // 监听查看大图
+      const {imgs} = this;
+      if (imgs.length > 0) {
+        for (let i = 0, len = imgs.length; i < len; i++) {
+          imgs[i].onclick = null;
+        }
+      }
+      setTimeout(() => {
+        this.imgs = this.$refs.preview.querySelectorAll('img');
+        for (let i = 0, len = this.imgs.length; i < len; i++) {
+          this.imgs[i].onclick = () => {
+            const src = this.imgs[i].getAttribute('src');
+            this.previewImage(src);
+          }
+        }
+      }, 600);
+    },
+    previewImage(src) {// 预览图片
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        const width = img.naturalWidth;
+        const height = img.naturalHeight;
+        if ((height / width) > 1.4) {
+          this.previewImgMode = 'horizontal';
+        } else {
+          this.previewImgMode = 'vertical';
+        }
+        this.previewImgSrc = src;
+        this.previewImgModal = true;
       }
     }
   },
   watch: {
-
+    initialValue() {
+      this.value = this.initialValue;
+    },
     value() {
       clearTimeout(this.timeoutId);
       this.timeoutId = setTimeout(() => {
-        this.previewMarkdown = marked(this.value, {
-          sanitize: true
+        this.html = marked(this.value, {
+          sanitize: false
         });
       }, 30)
       this.indexLenth = this.value.split('\n').length;
-      const height_1 = this.indexLenth * 22;
-      const height_2 = this.$refs.textarea.scrollHeight;
-      const height_3 = this.$refs.preview.scrollHeight;
-      this.scrollHeight = Math.max(height_1, height_2, height_3);
-    },
-    initialValue() {
-      this.value = this.initialValue;
+      const height1 = this.indexLenth * 22;
+      const height2 = this.$refs.textarea.scrollHeight;
+      const height3 = this.$refs.preview.scrollHeight;
+      this.scrollHeight = Math.max(height1, height2, height3);
+      this.indexLenth = parseInt(this.scrollHeight / 22, 0) - 1;
+      this.addImageClickLintener();
     }
   },
   destroyed() { // 销毁时清除定时器

@@ -1,6 +1,7 @@
 var path = require('path')
 var webpack = require('webpack')
 const NODE_ENV = process.env.NODE_ENV;
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
 module.exports = {
   entry: NODE_ENV==='npm'?'./src/index.js':'./src/main.js',
@@ -12,6 +13,7 @@ module.exports = {
     library: 'markdown-vue',
     umdNamedDefine: true
   },
+  devtool: NODE_ENV==='develop'?'cheap-module-eval-source-map':'cheap-module-source-map',
   module: {
     rules: [
       {
@@ -60,7 +62,7 @@ module.exports = {
   devtool: '#eval-source-map'
 }
 
-if (process.env.NODE_ENV === 'production') {
+if (NODE_ENV === 'production'||NODE_ENV==='npm') {
   module.exports.devtool = '#source-map'
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
@@ -77,6 +79,9 @@ if (process.env.NODE_ENV === 'production') {
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
-    })
+    }),
+    new CompressionWebpackPlugin({
+      algorithm: 'gzip'
+  })
   ])
 }

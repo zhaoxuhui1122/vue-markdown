@@ -1,10 +1,10 @@
 {
   "name": "vue-meditor",
   "description": "一款使用marked和highlight.js开发的一款markdown编辑器",
-  "version": "0.9.3",
+  "version": "1.2.0",
   "author": "zhaoxuhui<1258835133@qq.com>",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "build/index.js",
   "keywords": [
     "markdown编辑器",
     "vue markdown编辑器",
@@ -18,7 +18,8 @@
   "dependencies": {
     "highlight.js": "^9.12.0",
     "marked": "^0.4.0",
-    "vue": "^2.5.11"
+    "vue": "^2.5.11",
+    "vue-meditor": "^1.1.0"
   },
   "browserslist": [
     "> 1%",
@@ -30,8 +31,9 @@
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
     "babel-preset-stage-3": "^6.24.1",
-    "cross-env": "^5.0.5",
+    "cross-env": "^5.2.0",
     "css-loader": "^0.28.11",
+    "compression-webpack-plugin": "^1.1.11",
     "file-loader": "^1.1.4",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
