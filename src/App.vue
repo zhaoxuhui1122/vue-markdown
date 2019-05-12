@@ -4,7 +4,7 @@
       <h1>vue-markdown编辑器组件</h1>
       <a target="_blank" href="https://github.com/zhaoxuhui1122/vue-markdown">使用文档</a>
       <div class="content">
-        <mark-down @on-save="save" theme="OneDark" :initialValue="initialValue"></mark-down>
+        <mark-down @on-save="save" :theme="theme" :initialValue="initialValue"></mark-down>
       </div>
     </div>
   </div>
@@ -12,8 +12,8 @@
 
 <script>
   // import MarkDown from './markdown/index' // 开发文件
-  // import MarkDown from "../build"; // 引入打包好的文件
-  import MarkDown from 'vue-meditor';
+  import MarkDown from "../build"; // 引入打包好的文件
+  // import MarkDown from 'vue-meditor';
 
   import doc from './doc';
   export default {
@@ -23,7 +23,8 @@
     },
     data() {
       return {
-        initialValue: ""
+        initialValue: "",
+        theme: 'OneDark'
       };
     },
     methods: {

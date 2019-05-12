@@ -1,6 +1,8 @@
 import hljs from './js/hljs';
 import marked from 'marked';
-import {saveFile} from "./js/utils";
+import {
+  saveFile
+} from "./js/utils";
 import defaultTools from './js/tools';
 
 hljs.initHighlightingOnLoad();
@@ -22,7 +24,7 @@ marked.setOptions({
 export default {
   name: 'markdown',
   props: {
-    initialValue: String,// 初始化内容
+    initialValue: String, // 初始化内容
     theme: { // 默认主题
       type: String,
       default: 'Light'
@@ -37,19 +39,19 @@ export default {
     }, // 宽度
     toolbars: { // 工具栏
       type: Object,
-      default() {
+      default () {
         return {};
       }
     },
-    autoSave: {// 是否自动保存
+    autoSave: { // 是否自动保存
       type: Boolean,
       default: true
     },
-    interval: {// 自动保存间隔 mm
+    interval: { // 自动保存间隔 mm
       type: Number,
       default: 100000
     },
-    exportFileName: {// 默认导出文件名称
+    exportFileName: { // 默认导出文件名称
       type: String,
       default: '未命名文件'
     }
@@ -61,17 +63,17 @@ export default {
       indexLenth: 100,
       html: '',
       preview: 1, // 是否是预览状态
-      isFullscreen: false,// 是否是全屏
+      isFullscreen: false, // 是否是全屏
       scrollHeight: null,
       scroll: 'markdown', // 哪个半栏在滑动
-      themeName: 'Light', // 主题名称
+      themeName: '', // 主题名称
       lastInsert: '',
       timerId: null, // 定时器id
       themeSlideDown: false,
       imgs: [],
-      scrolling: true,// 同步滚动
-      editorHeight: this.height,
-      editorWidth: this.width,
+      scrolling: true, // 同步滚动
+      editorHeight: '',
+      editorWidth: '',
       previewImgModal: false,
       previewImgSrc: '',
       previewImgMode: ''
@@ -79,7 +81,9 @@ export default {
   },
   computed: {
     tools() {
-      const {toolbars = {}} = this;
+      const {
+        toolbars = {}
+      } = this;
       return {
         ...defaultTools,
         ...toolbars
@@ -87,8 +91,8 @@ export default {
     }
   },
   mounted() {
+    this.init();
     setTimeout(() => {
-      this.value = this.initialValue;
       const textarea = this.$refs.textarea;
       textarea.focus();
       textarea.addEventListener('keydown', e => {
@@ -108,9 +112,19 @@ export default {
     }, 20)
   },
   methods: {
+    init() {
+      this.value = this.initialValue;
+      this.themeName = this.theme;
+      this.editorHeight = this.height;
+      this.editorWidth = this.width;
+    },
     handlePaste(e) { // 粘贴图片
-      const {clipboardData = {}} = e;
-      const {types = [], items} = clipboardData;
+      const {
+        clipboardData = {}
+      } = e;
+      const {
+        types = [], items
+      } = clipboardData;
       let item = null;
       for (let i = 0; i < types.length; i++) {
         if (types[i] === 'Files') {
@@ -127,7 +141,9 @@ export default {
       }
     },
     markdownScroll() {
-      const {scrolling} = this;
+      const {
+        scrolling
+      } = this;
       if (!scrolling) {
         return;
       }
@@ -141,7 +157,9 @@ export default {
       }
     },
     previewScroll() {
-      const {scrolling} = this;
+      const {
+        scrolling
+      } = this;
       if (!scrolling) {
         return;
       }
@@ -158,7 +176,9 @@ export default {
       this.scroll = side;
     },
     insertContent(initStr) { // 插入文本
-      const {preview} = this;
+      const {
+        preview
+      } = this;
       if (preview === 2) {
         return;
       }
@@ -326,7 +346,11 @@ export default {
       }
     },
     handleSave() { // 保存操作
-      const {value, html, themeName} = this;
+      const {
+        value,
+        html,
+        themeName
+      } = this;
       this.$emit('on-save', {
         theme: themeName,
         value,
@@ -344,7 +368,9 @@ export default {
       this.themeSlideDown = false;
     },
     enter() { // 回车事件
-      const {lastInsert} = this;
+      const {
+        lastInsert
+      } = this;
       const list = ['-  ', '1. ', '- [ ]  ', '- [x]  ']
       if (list.includes(lastInsert)) {
         this.insertContent(lastInsert);
@@ -359,25 +385,31 @@ export default {
     exportMd() { // 导出为.md格式
       saveFile(this.value, this.exportFileName + '.md');
     },
-    importFile(e) {// 导入本地文件
+    importFile(e) { // 导入本地文件
       const file = e.target.files[0];
       if (!file) {
         return;
       }
-      const {type} = file;
+      const {
+        type
+      } = file;
       if (type !== 'text/markdown') {
         this.$Notice.error('文件格式有误!');
         return;
       }
       const reader = new FileReader();
-      reader.readAsText(file, {encoding: 'utf-8'});
+      reader.readAsText(file, {
+        encoding: 'utf-8'
+      });
       reader.onload = () => {
         this.value = reader.result;
         e.target.value = '';
       }
     },
     addImageClickLintener() { // 监听查看大图
-      const {imgs} = this;
+      const {
+        imgs
+      } = this;
       if (imgs.length > 0) {
         for (let i = 0, len = imgs.length; i < len; i++) {
           imgs[i].onclick = null;
@@ -393,7 +425,7 @@ export default {
         }
       }, 600);
     },
-    previewImage(src) {// 预览图片
+    previewImage(src) { // 预览图片
       const img = new Image();
       img.src = src;
       img.onload = () => {
@@ -427,6 +459,15 @@ export default {
       this.scrollHeight = Math.max(height1, height2, height3);
       this.indexLenth = parseInt(this.scrollHeight / 22, 0) - 1;
       this.addImageClickLintener();
+    },
+    theme() {
+      this.themeName = this.theme;
+    },
+    height() {
+      this.editorHeight = this.height;
+    },
+    width() {
+      this.editorWidth = this.width;
     }
   },
   destroyed() { // 销毁时清除定时器

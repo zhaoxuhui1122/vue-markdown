@@ -126,6 +126,8 @@ const config = {
 
 
 ### 更新日志
+**1.2.1**
+1. 支持theme、width、heigh动态切换
 
 **v1.2.0**
 1. 优化代码体积，按需加载highlight.js，较少了三分之二的代码体积
