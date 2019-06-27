@@ -54,6 +54,12 @@ export default {
     exportFileName: { // 默认导出文件名称
       type: String,
       default: '未命名文件'
+    },
+    markedOptions: {
+      type: Object,
+      default () {
+        return {};
+      }
     }
   },
   data() {
@@ -449,7 +455,8 @@ export default {
       clearTimeout(this.timeoutId);
       this.timeoutId = setTimeout(() => {
         this.html = marked(this.value, {
-          sanitize: false
+          sanitize: false,
+          ...this.markedOptions
         });
       }, 30)
       this.indexLenth = this.value.split('\n').length;
