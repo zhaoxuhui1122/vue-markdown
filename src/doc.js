@@ -13,7 +13,7 @@ GitHub :[https://github.com/zhaoxuhui1122/vue-markdown]( https://github.com/zhao
 
 
 **效果**
-![image](http://smalleyes.oss-cn-shanghai.aliyuncs.com/WechatIMG586.png)
+![image](/WechatIMG586.png)
 
 ### 2.安装
 
@@ -126,28 +126,39 @@ const config = {
 
 
 ### 更新日志
+**1.3.0**
+- 支持配置marked的markedOptions，感谢[dkvirus](https://github.com/dkvirus)提出的[issues#12](https://github.com/zhaoxuhui1122/vue-markdown/issues/12)和具体的解决办法
+
+**1.2.1**
+- 支持theme、width、heigh动态切换
+
+**v1.2.0**
+- 优化代码体积，按需加载highlight.js，较少了三分之二的代码体积
+- 新增图片粘贴功能
+- 增加图片预览功能
+- 修复部分bug
 
 **v1.0.0**
-1. 优化代码体积，按需加载highlight.js，较少了三分之二的代码体积
-2. 新增图片粘贴功能
-3. 增加图片预览功能
-4. 修复部分bug
+- 优化代码体积，按需加载highlight.js，较少了三分之二的代码体积
+- 新增图片粘贴功能
+- 增加图片预览功能
+- 修复部分bug
 
 **v0.9.3**
 
-1. 解决初始化值initialValue无法动态改变的问题
-2. 修改了打包配置
+- 解决初始化值initialValue无法动态改变的问题
+- 修改了打包配置
 
 **v0.8.0**
 
-1. 新增md文件导出和读取功能
-2. 修改预览部分样式
-3. 修改头部菜单样式
+- 新增md文件导出和读取功能
+- 修改预览部分样式
+- 修改头部菜单样式
 
 **v0.7.0**
 
-1. 修复主题无法更新的问题
-2. 修复文档初始化值无法动态切换的问题
+- 修复主题无法更新的问题
+- 修复文档初始化值无法动态切换的问题
 
 
 `
