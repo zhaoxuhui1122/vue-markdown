@@ -23,8 +23,21 @@ marked.setOptions({
 
 export default {
   name: 'markdown',
+  model: {
+    /**
+     * 自定义组件的 v-model
+     */
+    prop: 'value',
+    event: 'input'
+  },
   props: {
     initialValue: String, // 初始化内容
+    value: {
+      type: String,
+      default() {
+        return ''
+      }
+    }, // 自定义组件的 v-model
     theme: { // 默认主题
       type: String,
       default: 'Light'
@@ -39,7 +52,7 @@ export default {
     }, // 宽度
     toolbars: { // 工具栏
       type: Object,
-      default () {
+      default() {
         return {};
       }
     },
@@ -57,14 +70,14 @@ export default {
     },
     markedOptions: {
       type: Object,
-      default () {
+      default() {
         return {};
       }
     }
   },
   data() {
     return {
-      value: '', // 输入框内容
+      values: '', // 输入框内容
       timeoutId: null,
       indexLenth: 100,
       html: '',
@@ -119,7 +132,7 @@ export default {
   },
   methods: {
     init() {
-      this.value = this.initialValue;
+      this.values = this.initialValue;
       this.themeName = this.theme;
       this.editorHeight = this.height;
       this.editorWidth = this.width;
@@ -190,9 +203,9 @@ export default {
       }
       this.lastInsert = initStr;
       const point = this.getCursortPosition();
-      const lastChart = this.value.substring(point - 1, point);
-      const lastFourCharts = this.value.substring(point - 4, point);
-      if (lastChart !== '\n' && this.value !== '' && lastFourCharts !== '    ') {
+      const lastChart = this.values.substring(point - 1, point);
+      const lastFourCharts = this.values.substring(point - 4, point);
+      if (lastChart !== '\n' && this.values !== '' && lastFourCharts !== '    ') {
         const str = '\n' + initStr;
         this.insertAfterText(str);
       } else {
@@ -205,7 +218,7 @@ export default {
       if (document.selection) {
         textDom.focus();
         let selectRange = document.selection.createRange();
-        selectRange.moveStart('character', -this.value.length);
+        selectRange.moveStart('character', -this.values.length);
         cursorPos = selectRange.text.length;
       } else if (textDom.selectionStart || parseInt(textDom.selectionStart, 0) === 0) {
         cursorPos = textDom.selectionStart;
@@ -233,7 +246,7 @@ export default {
         textDom.value += value;
         textDom.focus();
       }
-      this.$set(this, 'value', textDom.value);
+      this.$set(this, 'values', textDom.value);
     },
     setCaretPosition(position) { // 设置光标位置
       const textDom = this.$refs.textarea;
@@ -274,9 +287,9 @@ export default {
     },
     insertCode() { // 插入code
       const point = this.getCursortPosition();
-      const lastChart = this.value.substring(point - 1, point);
+      const lastChart = this.values.substring(point - 1, point);
       this.insertContent('\n```\n\n```');
-      if (lastChart !== '\n' && this.value !== '') {
+      if (lastChart !== '\n' && this.values !== '') {
         this.setCaretPosition(point + 5);
       } else {
         this.setCaretPosition(point + 5);
@@ -284,9 +297,9 @@ export default {
     },
     insertStrong() { // 粗体
       const point = this.getCursortPosition();
-      const lastChart = this.value.substring(point - 1, point);
+      const lastChart = this.values.substring(point - 1, point);
       this.insertContent('****');
-      if (lastChart !== '\n' && this.value !== '') {
+      if (lastChart !== '\n' && this.values !== '') {
         this.setCaretPosition(point + 2);
       } else {
         this.setCaretPosition(point + 2);
@@ -294,9 +307,9 @@ export default {
     },
     insertItalic() { // 斜体
       const point = this.getCursortPosition();
-      const lastChart = this.value.substring(point - 1, point);
+      const lastChart = this.values.substring(point - 1, point);
       this.insertContent('**');
-      if (lastChart !== '\n' && this.value !== '') {
+      if (lastChart !== '\n' && this.values !== '') {
         this.setCaretPosition(point + 1);
       } else {
         this.setCaretPosition(point + 1);
@@ -304,9 +317,9 @@ export default {
     },
     insertBg() { // 背景色
       const point = this.getCursortPosition();
-      const lastChart = this.value.substring(point - 1, point);
+      const lastChart = this.values.substring(point - 1, point);
       this.insertContent('====');
-      if (lastChart !== '\n' && this.value !== '') {
+      if (lastChart !== '\n' && this.values !== '') {
         this.setCaretPosition(point + 5);
       } else {
         this.setCaretPosition(point + 5);
@@ -314,9 +327,9 @@ export default {
     },
     insertUnderline() { // 下划线
       const point = this.getCursortPosition();
-      const lastChart = this.value.substring(point - 1, point);
+      const lastChart = this.values.substring(point - 1, point);
       this.insertContent('<u></u>');
-      if (lastChart !== '\n' && this.value !== '') {
+      if (lastChart !== '\n' && this.values !== '') {
         this.setCaretPosition(point + 3);
       } else {
         this.setCaretPosition(point + 5);
@@ -324,9 +337,9 @@ export default {
     },
     insertOverline() { // overline
       const point = this.getCursortPosition();
-      const lastChart = this.value.substring(point - 1, point);
+      const lastChart = this.values.substring(point - 1, point);
       this.insertContent('~~~~');
-      if (lastChart !== '\n' && this.value !== '') {
+      if (lastChart !== '\n' && this.values !== '') {
         this.setCaretPosition(point + 2);
       } else {
         this.setCaretPosition(point + 2);
@@ -383,13 +396,13 @@ export default {
       }
     },
     onDelete() { // 删除时,以回车为界分割，如果数组最后一个元素为''时，将行一次插入的共嗯那个置为空，避免回车时再次插入
-      const lines = this.value.split('\n');
+      const lines = this.values.split('\n');
       if (lines[lines.length - 1] === '') {
         this.lastInsert = '';
       }
     },
     exportMd() { // 导出为.md格式
-      saveFile(this.value, this.exportFileName + '.md');
+      saveFile(this.values, this.exportFileName + '.md');
     },
     importFile(e) { // 导入本地文件
       const file = e.target.files[0];
@@ -408,7 +421,7 @@ export default {
         encoding: 'utf-8'
       });
       reader.onload = () => {
-        this.value = reader.result;
+        this.values = reader.result;
         e.target.value = '';
       }
     },
@@ -445,21 +458,27 @@ export default {
         this.previewImgSrc = src;
         this.previewImgModal = true;
       }
+    },
+    getValue() {
+      return this.value
     }
   },
   watch: {
     initialValue() {
-      this.value = this.initialValue;
+      this.values = this.initialValue;
     },
     value() {
+      this.values = this.value
+    },
+    values() {
       clearTimeout(this.timeoutId);
       this.timeoutId = setTimeout(() => {
-        this.html = marked(this.value, {
+        this.html = marked(this.values, {
           sanitize: false,
           ...this.markedOptions
         });
       }, 30)
-      this.indexLenth = this.value.split('\n').length;
+      this.indexLenth = this.values.split('\n').length;
       const height1 = this.indexLenth * 22;
       const height2 = this.$refs.textarea.scrollHeight;
       const height3 = this.$refs.preview.scrollHeight;

@@ -116,7 +116,8 @@
           <li v-for="(item,index) in indexLenth">{{index+1}}</li>
         </ul>
         <textarea
-          v-model="value"
+          :value="values"
+          @input="$emit('input', $event.target.value)"
           @keydown.tab="tab"
           @keyup.enter="enter"
           @keyup.delete="onDelete"
