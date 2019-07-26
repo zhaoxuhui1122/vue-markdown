@@ -24,7 +24,10 @@ marked.setOptions({
 export default {
   name: 'markdown',
   props: {
-    initialValue: String, // 初始化内容
+    initialValue: {
+      type:String,
+      default:''
+    }, // 初始化内容
     theme: { // 默认主题
       type: String,
       default: 'Light'
@@ -412,7 +415,7 @@ export default {
         e.target.value = '';
       }
     },
-    addImageClickLintener() { // 监听查看大图
+    addImageClickListener() { // 监听查看大图
       const {
         imgs
       } = this;
@@ -465,7 +468,7 @@ export default {
       const height3 = this.$refs.preview.scrollHeight;
       this.scrollHeight = Math.max(height1, height2, height3);
       this.indexLenth = parseInt(this.scrollHeight / 22, 0) - 1;
-      this.addImageClickLintener();
+      this.addImageClickListener();
     },
     theme() {
       this.themeName = this.theme;

@@ -4,7 +4,6 @@ export default `# vue-Markdown编辑器
 
 GitHub :[https://github.com/zhaoxuhui1122/vue-markdown]( https://github.com/zhaoxuhui1122/vue-markdown)
 
-
 ### 1.简介
 
 **一款使用marked和highlight.js开发的一款markdown编辑器，目前只支持在vue项目中使用。**

@@ -39,6 +39,7 @@
       setTimeout(() => {
         this.initialValue = doc;
       }, 1000);
+
     }
   };
 

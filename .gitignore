@@ -10,3 +10,4 @@ yarn-error.log
 *.njsproj
 *.sln
 /build/
+.vscode/
