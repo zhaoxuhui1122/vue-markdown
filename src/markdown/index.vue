@@ -97,7 +97,7 @@
             <li v-if="tools.clear" name="清空" @click="value=''">
                 <span class="iconfont icon-clear"></span>
             </li>
-            <li  v-if="tools.save" name="保存" @click="value=''">
+            <li  v-if="tools.save" name="保存" @click="handleSave">
                 <span class="iconfont icon-save"></span>
             </li>
             <li :name="scrolling?'同步滚动:开':'同步滚动:关'">
