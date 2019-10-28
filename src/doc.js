@@ -37,7 +37,7 @@ components:{
 ...
 
 <template>
-    <mark-down/>
+    <mark-down v-model="value"/>
 </template>
 \`\`\`
 
@@ -45,14 +45,16 @@ components:{
 
 名称 | 类型|说明|默认值
 ---|---|---|---
-initialValue|String|编辑器初始化内容
+value|Number、String|输入框内的值，支持数据双向绑定（1.4.0新增）|''
 width|Number|编辑器宽度|
 height|Number|编辑器高度，单位 px|600
 theme|String|代码块主题配置，共有四个值，分别为Light、Dark、OneDark、GitHub|Light
-autoSave|Boolean|是否自动保存|true
+autoSave|Boolean|是否自动保存|false
 interval|Number|自动保存频率，单位毫秒|10000
 toolbars|Object|工具栏配置，具体功能详见工具栏功能配置表
 exportFileName|String|导出文件的名称|未命名文件
+bordered|Boolean|是否存在边框（1.4.0新增）|true
+isPreview|Boolean|是否是预览模式，预览模式工具栏将不会显示，单纯的用作展示md文件（1.4.0新增）|false
 
 ### 5.events
 
@@ -60,6 +62,9 @@ exportFileName|String|导出文件的名称|未命名文件
 ---|---
 on-save|自动保存或者手动保存时触发，返回当前编辑器内原始输入内容和转以后的内容
 on-paste-image|粘贴图片，返回当前粘贴的file文件
+on-theme-change|切换主题时触发，返回当前主题名称
+on-copy|复制代码后触发|返回复制的内容
+
 ### 6.工具栏配置
 
 名称 | 说明 | 默认显示
@@ -83,20 +88,23 @@ image|image|是
 table |表格|是
 checked|已完成列表|是
 notChecked |未完成列表|是
-shift|预览|是
+preview|预览|是
+split|分屏模式切换|是
 print |打印|否
 theme|主题切换|是
 fullscreen |全屏|是
 exportmd|导出为*.md文件|是
 importmd|导入本地*.md文件|是
-
+save|保存按钮|否
+clear|清空内容|否
 ### 7.其他说明
 **关于保存时返回值**
 
 \`\`\`
-    value // 编辑器输入的原始内容
-    html // 右侧现实的问转义后的内容
-    theme // 保存时的主题名字
+    {
+        value, // 编辑器输入的原始内容
+        theme, // 保存时的主题名字
+    }
 \`\`\`
 **标题配置**
 
@@ -125,6 +133,13 @@ const config = {
 
 
 ### 更新日志
+**1.4.0**
+- 支持输入值双向数据绑定
+- 支持预览模式
+- 支持复制代码块
+- 工具栏增加增加清空内容、保存、分屏、预览功能
+
+
 **1.3.0**
 - 支持配置marked的markedOptions，感谢[dkvirus](https://github.com/dkvirus)提出的[issues#12](https://github.com/zhaoxuhui1122/vue-markdown/issues/12)和具体的解决办法
 
@@ -158,6 +173,5 @@ const config = {
 
 - 修复主题无法更新的问题
 - 修复文档初始化值无法动态切换的问题
-
 
 `

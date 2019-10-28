@@ -1,0 +1,4 @@
+# Created by .ignore support plugin (hsz.mobi)
+src/markdown/font/*.js
+src/doc.js
+src/markdown/js/hljs.js
