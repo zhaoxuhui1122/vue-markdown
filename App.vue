@@ -12,8 +12,9 @@
 </template>
 
 <script>
-    import Markdown from './dist/simple';
+    // import Markdown from './dist/simple';
     // import Markdown from 'vue-meditor';
+    import Markdown from './src/pro';
 
     export default {
         components: {
