@@ -5,7 +5,7 @@
 
 编辑器涵盖了常用的markdown编辑器功能，可通过已有属性进行配置，对编辑器功能和样式进行基本的配置，也可根据需求进行深度定制。
 #### [项目地址](https://github.com/zhaoxuhui1122/vue-markdown)
-#### [文档地址]([https://zhaoxuhui1122.github.io/vue-markdown-docs/)
+#### [文档地址](https://zhaoxuhui1122.github.io/vue-markdown-docs/)
 **示例**
 ![image.png](https://upload-images.jianshu.io/upload_images/9390764-f6b0840eca057d61.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
