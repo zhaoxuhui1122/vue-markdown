@@ -425,3 +425,5 @@ export default hljs;
 ## 问题反馈
 
 对于功能上的缺陷、使用方法和希望扩展的功能，可以提 [Issues](https://github.com/zhaoxuhui1122/vue-markdown/issues)。
+
+##  license: `MIT`

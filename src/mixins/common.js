@@ -105,10 +105,11 @@ export default {
             );
         },
         handleSave() {// 保存操作
-            const { currentValue, themeName } = this;
+            const { currentValue, themeName,html } = this;
             this.$emit('on-save', {
                 theme: themeName,
-                value: currentValue
+                value: currentValue,
+                html
             });
         },
         toggleSlideDown() {// 显示主题选项
