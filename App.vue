@@ -4,9 +4,9 @@
             v-model="val"
             @on-ready="onReady"
             @on-copy="onCopy"
-            @on-paste-image="onPasteImage"
+            @on-upload-image="onUpladImage"
             @on-save="onSave"
-            :height="500"
+            :height="fullHeight"
         />
     </div>
 </template>
@@ -21,11 +21,33 @@
         components: {
             Markdown
         },
-        data: function () {
-            return {
-                val: ''
+        mounted() {
+                    const that = this
+                    window.onresize = () => {
+                    return (() => {
+                    window.fullHeight = document.documentElement.clientHeight
+                    that.fullHeight = window.fullHeight
+                })()
             }
         },
+        data: function () {
+            return {
+                val: '',
+                fullHeight: document.documentElement.clientHeight
+            }
+        },
+          watch: {
+              fullHeight(val) {
+                if (!this.timer) {
+                  this.fullHeight = val
+                  this.timer = true
+                  let that = this
+                  setTimeout(function() {
+                    that.timer = false
+                  }, 400)
+                }
+              }
+            },
         methods: {
             onReady(data) {
                 console.log(data)
@@ -33,7 +55,7 @@
             onCopy(text) {
                 console.log(text);
             },
-            onPasteImage(file) {
+            onUpladImage(file) {
                 console.log(file)
             },
             onSave(data) {

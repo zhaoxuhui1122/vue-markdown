@@ -7,7 +7,7 @@ import codemirrorConfig from '../../assets/js/codemirror/config';
 import '../../assets/js/codemirror/styles/codemirror.css';
 import common from '../../mixins/common';
 import marked from '../../config/marked';
-
+import tocObj from "../../assets/js/marked/createToc";
 export default {
     name: 'markdown-pro',
     mixins: [common],
@@ -345,6 +345,10 @@ export default {
                     html = html.replace(/<pre>/g, '<div class="code-block"><span class="copy-code">' + this.copyBtnText + '</span><pre>').replace(/<\/pre>/g, '</pre></div>')
                 }
                 this.html = html;
+                //toc
+                this.toc = tocObj.tocItems;
+                tocObj.reset()
+                 
                 this.addImageClickListener();
                 this.addCopyListener();
                 this.$emit('input', currentValue);
