@@ -1,4 +1,4 @@
-import { saveFile } from '../utils';
+import {saveFile} from '../utils';
 import defaultTools from '../config/tools';
 
 export default {
@@ -48,7 +48,7 @@ export default {
                 return {};
             }
         },
-        copyCode:{// 复制代码
+        copyCode: {// 复制代码
             type: Boolean,
             default: true
         },
@@ -75,6 +75,7 @@ export default {
             timerId: null, // 定时器id
             themeName: '',
             themeSlideDown: false,
+            imgSlideDown: false,
             imgs: [],
             scrolling: true, // 同步滚动
             editorScrollHeight: 0,
@@ -85,7 +86,7 @@ export default {
     },
     computed: {
         tools() {
-            const { toolbars = {} } = this;
+            const {toolbars = {}} = this;
             return {
                 ...defaultTools,
                 ...toolbars
@@ -105,7 +106,7 @@ export default {
             );
         },
         handleSave() {// 保存操作
-            const { currentValue, themeName,html } = this;
+            const {currentValue, themeName, html} = this;
             this.$emit('on-save', {
                 theme: themeName,
                 value: currentValue,
@@ -128,8 +129,8 @@ export default {
             if (!file) {
                 return;
             }
-            const { type } = file;
-            if (!['text/markdown','text/src'].includes(type)) {
+            const {type} = file;
+            if (!['text/markdown', 'text/src'].includes(type)) {
                 return;
             }
             const reader = new FileReader();
@@ -139,17 +140,17 @@ export default {
             reader.onload = () => {
                 this.currentValue = reader.result;
                 e.target.value = '';
-                if(this.pro){// 专业版，手动set value
+                if (this.pro) {// 专业版，手动set value
                     this.editor.setOption('value', this.currentValue);
                 }
             };
-            reader.onerror = err=>{
+            reader.onerror = err => {
                 console.error(err);
             }
         },
         handlePaste(_, e) {// 粘贴图片
-            const { clipboardData = {} } = e;
-            const { types = [], items } = clipboardData;
+            const {clipboardData = {}} = e;
+            const {types = [], items} = clipboardData;
             let item = null;
             for (let i = 0; i < types.length; i++) {
                 if (types[i] === 'Files') {
@@ -160,7 +161,7 @@ export default {
             if (item) {
                 const file = item.getAsFile();
                 if (/image/gi.test(file.type)) {
-                    this.$emit('on-paste-image', file);
+                    this.$emit('on-upload-image', file);
                     e.preventDefault();
                 }
             }
@@ -169,7 +170,7 @@ export default {
             this.scrollSide = side;
         },
         addImageClickListener() {// 监听查看大图
-            const { imgs = [] } = this;
+            const {imgs = []} = this;
             if (imgs.length > 0) {
                 for (let i = 0, len = imgs.length; i < len; i++) {
                     imgs[i].onclick = null;
@@ -199,6 +200,19 @@ export default {
                 this.previewImgSrc = src;
                 this.previewImgModal = true;
             };
+        },
+        chooseImage() {// 选择图片
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = ()=>{
+               const files = input.files;
+               if(files[0]){
+                   this.$emit('on-upload-image', files[0]);
+                   input.value = '';
+               }
+            }
+            input.click();
         },
         addCopyListener() {// 监听复制操作
             setTimeout(() => {

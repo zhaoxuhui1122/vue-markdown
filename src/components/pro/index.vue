@@ -87,6 +87,9 @@
             <li v-if="tools.image" name="图片">
                 <span @click="insertImage" class="iconfont icon-img"></span>
             </li>
+            <li v-if="tools.uploadImage" name="本地图片">
+                <span @click="chooseImage" class="iconfont icon-upload-img"></span>
+            </li>
             <li v-if="tools.table" name="表格">
                 <span @click="insertTable" class="iconfont icon-table"></span>
             </li>

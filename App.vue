@@ -4,7 +4,7 @@
             v-model="val"
             @on-ready="onReady"
             @on-copy="onCopy"
-            @on-paste-image="onPasteImage"
+            @on-upload-image="onUpladImage"
             @on-save="onSave"
             :height="500"
         />
@@ -33,7 +33,7 @@
             onCopy(text) {
                 console.log(text);
             },
-            onPasteImage(file) {
+            onUpladImage(file) {
                 console.log(file)
             },
             onSave(data) {

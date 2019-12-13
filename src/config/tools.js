@@ -18,6 +18,7 @@ export default {
     code: true,
     link: true,
     image: true,
+    uploadImage:false,
     table: true,
     checked: true,
     notChecked: true,
