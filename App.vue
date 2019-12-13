@@ -15,6 +15,7 @@
     // import Markdown from './dist/simple';
     // import Markdown from 'vue-meditor';
     import Markdown from './src/pro';
+    // import Markdown from './src/simple';
 
     export default {
         components: {
