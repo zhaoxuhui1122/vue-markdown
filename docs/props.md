@@ -47,6 +47,7 @@ ol|有序列表|是
 code |代码块|是
 link |链接|是
 image|image|是
+uploadImage|本地图片|否
 table |表格|是
 checked|已完成列表|是
 notChecked |未完成列表|是
