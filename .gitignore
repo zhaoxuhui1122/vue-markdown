@@ -18,3 +18,4 @@ Thumbs.db
 .vscode
 .idea
 /docs/.vuepress/dist/
+package-lock.json

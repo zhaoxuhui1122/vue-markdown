@@ -23,7 +23,7 @@
         },
         data: function () {
             return {
-                val: ''
+                val: null
             }
         },
         methods: {
