@@ -59,6 +59,10 @@ export default {
         isPreview: {//是否是预览模式
             type: Boolean,
             default: false
+        },
+        split: {//分屏显示
+            type: Boolean,
+            default: true
         }
     },
     data() {
@@ -68,7 +72,7 @@ export default {
             indexLenth: 1,
             html: '',// 预览的html
             preview: false, // 是否是预览状态
-            split: true, //分屏显示
+            // split: true,//分屏显示
             fullscreen: false, // 是否是全屏
             scrollSide: '', // 哪个半栏在滑动
             lastInsert: '', //最后一次插入的内容
@@ -130,7 +134,8 @@ export default {
                 return;
             }
             const {type} = file;
-            if (!['text/markdown', 'text/src'].includes(type)) {
+            if (!(type === '' || /text\/\w+/.test(type))) {
+                this.$emit('on-error', { code: 415, message: 'Only text files can be imported' });
                 return;
             }
             const reader = new FileReader();

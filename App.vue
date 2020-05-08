@@ -6,7 +6,9 @@
             @on-copy="onCopy"
             @on-upload-image="onUpladImage"
             @on-save="onSave"
+            @on-error="onError"
             :height="500"
+            :split="false"
         />
     </div>
 </template>
@@ -23,7 +25,7 @@
         },
         data: function () {
             return {
-                val: ''
+                val: null
             }
         },
         methods: {
@@ -38,6 +40,9 @@
             },
             onSave(data) {
                 console.log(data);
+            },
+            onError(err) {
+                console.log(err)
             }
         }
     }

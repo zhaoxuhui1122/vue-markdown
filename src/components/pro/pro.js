@@ -25,10 +25,9 @@ export default {
     },
     methods: {
         init() {// 初始化
-            this.currentValue = this.value;
             this.themeName = this.theme;
             this.preview = this.isPreview;
-            this.currentValue = this.value;
+            this.currentValue = this.value || '';
             if (this.isPreview) {
                 return;
             }

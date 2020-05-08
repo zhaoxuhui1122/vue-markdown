@@ -14,7 +14,7 @@ export default {
     },
     methods: {
         init() {
-            this.currentValue = this.value;
+            this.currentValue = this.value || '';
             this.themeName = this.theme;
             this.preview = this.isPreview;
             if (this.isPreview) {

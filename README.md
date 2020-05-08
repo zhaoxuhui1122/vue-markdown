@@ -61,7 +61,7 @@ import { MarkdownPreview } from 'vue-meditor'
 ```js
 import Markdown from '@/components/markdown/...';
 ```
-专业版 
+专业版
 ```js
 import MarkdownPro from '@/components/markdown/pro';
 ```
@@ -80,7 +80,7 @@ import MarkdownPreview from '@/components/markdown/preview';
 
 <script>
     import Markdown from 'vue-meditor';
-    
+
     export default {
         name: "markdown",
         components: {
@@ -214,6 +214,11 @@ marked配置项,可以根据需求自定义。
 
 复制代码按钮显示文字。
 
+#### split
+- Type: `Boolean`
+- Default: `true`
+
+编辑器默认展示形态，默认为双栏模式（展示编辑区域与预览区域），为 `false` 时，默认展示为单栏模式（只有编辑区域）。
 
 ### 预览组件基本属性
 #### initialValue
@@ -240,7 +245,6 @@ marked配置项,与编辑器内该配置一致。
 
 是否支持复制代码块内的内容。
 
-
 #### copyBtnText
 - Type: `String`
 - Default: `复制代码`
@@ -253,12 +257,21 @@ marked配置项,与编辑器内该配置一致。
 编辑器保存事件，自动保存或者手动保存时触发，支持`ctrl+s`或`command+s`触发保存，返回值类型为`Object`，包含当前输入值`value`和选择的代码块主题`theme`。
 
 
-#### on-paste-image	
+#### on-paste-image
 
 监听编辑器粘贴图片事件，在编辑区域内手动粘贴图片时触发，可用于支持粘贴插入图片文件，返回`file`文件，上传文件后可结合`on-ready`事件内返回的`insertContent`插入图片。
 
-#### on-copy 
+#### on-copy
 复制代码块内容，触发时返回当前代码块的text，copyCode开启时才有效。
+
+#### on-error
+返回编辑器组件遇到的错误信息，交给业务代码进行错误处理。
+
+code | message | 备注
+--- | --- | ---
+415 | Only text files can be imported | 导入文件仅支持文本格式
+
+目前只有这一个错误信息。二次开发时，可根据自己的需要，在不同的地方返回不同的错误码以及错误信息。
 
 ## 二次开发
 ### 粘贴插入图片
