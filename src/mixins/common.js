@@ -135,7 +135,7 @@ export default {
             }
             const {type} = file;
             if (!(type === '' || /text\/\w+/.test(type))) {
-                this.$emit('on-error', { code: 415, message: 'Only text files can be imported' })
+                this.$emit('on-error', { code: 415, message: 'Only text files can be imported' });
                 return;
             }
             const reader = new FileReader();
@@ -144,7 +144,6 @@ export default {
             });
             reader.onload = () => {
                 this.currentValue = reader.result;
-                console.log(typeof reader.result)
                 e.target.value = '';
                 if (this.pro) {// 专业版，手动set value
                     this.editor.setOption('value', this.currentValue);
