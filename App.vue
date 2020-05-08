@@ -6,6 +6,7 @@
             @on-copy="onCopy"
             @on-upload-image="onUpladImage"
             @on-save="onSave"
+            @on-error="onError"
             :height="500"
         />
     </div>
@@ -38,6 +39,9 @@
             },
             onSave(data) {
                 console.log(data);
+            },
+            onError(err) {
+                console.log(err)
             }
         }
     }
