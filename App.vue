@@ -8,6 +8,7 @@
             @on-save="onSave"
             @on-error="onError"
             :height="500"
+            :split="false"
         />
     </div>
 </template>

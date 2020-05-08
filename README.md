@@ -240,10 +240,15 @@ marked配置项,与编辑器内该配置一致。
 
 是否支持复制代码块内的内容。
 
-
 #### copyBtnText
 - Type: `String`
 - Default: `复制代码`
+
+#### split
+- Type: `Boolean`
+- Default: `true`
+
+编辑器默认展示形态，默认为双栏模式（展示编辑区域与预览区域），为 `false` 时，默认展示为单栏模式（只有编辑区域）。
 
 复制代码按钮显示文字。
 ### on-ready
