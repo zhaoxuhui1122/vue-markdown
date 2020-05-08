@@ -5347,6 +5347,8 @@ function patchDisplay(cm, updateNumbersFrom, dims) {
 
 function updateGutterSpace(display) {
     var width = display.gutters.offsetWidth;
+    // 修复初始化编辑器，但编辑器在页面默认隐藏(display: none)，显示编辑器后(修改为 display:block)，录入文字与序号重叠的BUG
+    width = Math.max(33, width)
     display.sizer.style.marginLeft = width + "px";
 }
 
