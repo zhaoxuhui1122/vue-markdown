@@ -129,11 +129,9 @@ export default {
             if (!file) {
                 return;
             }
-            const {type} = file;
-            if (!['text/markdown', 'text/src'].includes(type)) {
-                return;
-            }
+
             const reader = new FileReader();
+
             reader.readAsText(file, {
                 encoding: 'utf-8'
             });
