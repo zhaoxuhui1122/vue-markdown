@@ -3,7 +3,7 @@
 - Type: `String/Number`
 - Default: `''`
 
-编辑器输入的文本，支持通过`v-dodel`数据双向绑定设置编辑器内容和获取编辑器的值。
+编辑器输入的文本，支持通过`v-model`数据双向绑定设置编辑器内容和获取编辑器的值。
 
 ### width
 - Type: `String/Number`
