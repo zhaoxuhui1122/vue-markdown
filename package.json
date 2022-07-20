@@ -1,8 +1,8 @@
 {
     "name": "vue-meditor",
     "description": "一款使用marked和highlight.js开发的一款markdown编辑器",
-    "version": "2.1.0",
-    "author": "zhaoxuhui<1258835133@qq.com>",
+    "version": "2.1.2",
+    "author": "zhaoxuhui<hz_zhaoxuhui@163.com>",
     "license": "MIT",
     "private": false,
     "main": "dist/index.js",
