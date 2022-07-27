@@ -1,8 +1,11 @@
 import {saveFile} from '../utils';
 import defaultTools from '../config/tools';
 
+import AnchorLink from '../components/Anchor/anchorLink'
+import Anchor from     '../components/Anchor/anchor'
 export default {
     name: 'markdown',
+    components: {Anchor,AnchorLink},
     props: {
         value: {
             type: [String, Number],

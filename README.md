@@ -344,7 +344,15 @@ export default index.setOptions({
 
 预览区域和文档预览组件暂不支持自动生成目录，实现自动生成目录思路目前想到的大致有
 - 重写`renderer.heading` 方法，为生成的标题添加id，输入特定快捷键，如`[TOC]`时，查找预览区域内的的所有标题标签，分析等级关系，生成目录标签
-
+属性 |	说明|	类型|	默认值
+-|-|-|-
+affix	|固定模式|	Boolean	|true
+offset-top	|距离窗口顶部达到指定偏移量后触发	|Number|	0
+offset-bottom	|距离窗口底部达到指定偏移量后触发|	Number|	-
+bounds|	锚点区域边界，单位：px|	Number|	5
+scroll-offset|	点击滚动的额外距离|	Number|	0
+container|	指定滚动的容器	|String | HTMLElement|	-
+show-ink|	是否显示小圆点|	Boolean	|false
 ### icon替换
 项目内所有的icon和命名参考`/assets/font/index.html`，替换时需注意，预览区域的checkbox为icon，注意一并替换，
 修改`/assets/css/index.less`内的`input[type="checkbox"]`的`:after`样式。

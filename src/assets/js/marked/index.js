@@ -1,3 +1,4 @@
+import tocObj from './createToc';
 var block = {
     newline: /^\n+/,
     code: /^( {4}[^\n]+\n*)+/,
@@ -947,20 +948,22 @@ Renderer.prototype.html = function (html) {
 };
 
 Renderer.prototype.heading = function (text, level, raw, slugger) {
-    if (this.options.headerIds) {
-        return '<h'
-            + level
-            + ' id="'
-            + this.options.headerPrefix
-            + slugger.slug(raw)
-            + '">'
-            + text
-            + '</h'
-            + level
-            + '>\n';
-    }
-    // ignore IDs
-    return '<h' + level + '>' + text + '</h' + level + '>\n';
+    // if (this.options.headerIds) {
+    //     return '<h'
+    //         + level
+    //         + ' id="'
+    //         + this.options.headerPrefix
+    //         + slugger.slug(raw)
+    //         + '">'
+    //         + text
+    //         + '</h'
+    //         + level
+    //         + '>\n';
+    // }
+    // // ignore IDs
+    // return '<h' + level + '>' + text + '</h' + level + '>\n';
+    let anchor = tocObj.add(text, level);
+    return `<a id="${anchor}" href="#${anchor}" class="anchor-fix"><h${level}>${text}</h${level}></a>\n`;
 };
 
 Renderer.prototype.hr = function () {

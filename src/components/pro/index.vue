@@ -193,6 +193,12 @@
             >
                 <div v-html="html" ref="previewInner"></div>
             </div>
+            <!-- 目录 -->
+             <Anchor :offset-top="40" style="margin-left:20px;width:20%">
+                <template v-for="item in toc">
+                  <AnchorLink :href="`#${item.anchor}`" :title="item.text" :key="item.anchor" />
+                </template>
+             </Anchor>
         </div>
         <!--    预览图片-->
         <div :class="['preview-img', previewImgModal ? 'active' : '']">
