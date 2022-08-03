@@ -1,6 +1,6 @@
 # 介绍
 
-vue-marodown是一款使用marked和highlight.js开发的一款markdown编辑器，主要包括三个部分
+vue-markdown是一款使用marked和highlight.js开发的一款markdown编辑器，主要包括三个部分
 
 1. 简单版编辑器，左侧文本输入框使用textarea实现；
 2. 专业版编辑器，左侧输入框使用codemirror实现；
