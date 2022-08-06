@@ -1,4 +1,4 @@
-import marked from '../../config/marked';
+﻿import marked from '../../config/marked';
 import common from '../../mixins/common';
 
 export default {
@@ -43,9 +43,9 @@ export default {
                 })
             }, 20);
         },
-
         insertContent(initStr) {
             // 插入文本
+            let cursorSwitch = 0; // 0: 默认值, 适配原逻辑; 1: 增加了换行符;
             this.lastInsert = initStr;
             const point = this.getCursortPosition();
             const lastChart = this.currentValue.substring(point - 1, point);
@@ -59,10 +59,12 @@ export default {
                 lastFourCharts !== '    '
             ) {
                 const str = '\n' + initStr;
+                cursorSwitch = 1;
                 this.insertAfterText(str);
             } else {
                 this.insertAfterText(initStr);
             }
+            return cursorSwitch;
         },
         getCursortPosition() {
             // 获取光标位置
@@ -125,6 +127,13 @@ export default {
                 range.select();
             }
         },
+        setCaretBySwitch(cursorSwitch, point, offset) {
+            if (cursorSwitch === 1) {
+                this.setCaretPosition(point + offset + 1);
+            } else if (!cursorSwitch) {
+                this.setCaretPosition(point + offset);
+            }
+        },
         insertQuote() {
             // 引用
             this.insertContent('\n>  ');
@@ -148,68 +157,38 @@ export default {
         insertCode() {
             // 插入code
             const point = this.getCursortPosition();
-            const lastChart = this.currentValue.substring(point - 1, point);
-            this.insertContent('\n```\n\n```');
-            if (lastChart !== '\n' && this.currentValue !== '') {
-                this.setCaretPosition(point + 5);
-            } else {
-                this.setCaretPosition(point + 5);
-            }
+            const cursorSwitch = this.insertContent('\n```\n\n```');
+            this.setCaretBySwitch(cursorSwitch, point, 5);
         },
         insertStrong() {
             // 粗体
             const point = this.getCursortPosition();
-            const lastChart = this.currentValue.substring(point - 1, point);
-            this.insertContent('****');
-            if (lastChart !== '\n' && this.currentValue !== '') {
-                this.setCaretPosition(point + 2);
-            } else {
-                this.setCaretPosition(point + 2);
-            }
+            const cursorSwitch = this.insertContent('****');
+            this.setCaretBySwitch(cursorSwitch, point, 2);
         },
         insertItalic() {
             // 斜体
             const point = this.getCursortPosition();
-            const lastChart = this.currentValue.substring(point - 1, point);
-            this.insertContent('**');
-            if (lastChart !== '\n' && this.currentValue !== '') {
-                this.setCaretPosition(point + 1);
-            } else {
-                this.setCaretPosition(point + 1);
-            }
+            const cursorSwitch = this.insertContent('**');
+            this.setCaretBySwitch(cursorSwitch, point, 1);
         },
         insertBg() {
             // 背景色
             const point = this.getCursortPosition();
-            const lastChart = this.currentValue.substring(point - 1, point);
-            this.insertContent('====');
-            if (lastChart !== '\n' && this.currentValue !== '') {
-                this.setCaretPosition(point + 5);
-            } else {
-                this.setCaretPosition(point + 5);
-            }
+            const cursorSwitch = this.insertContent('====');
+            this.setCaretBySwitch(cursorSwitch, point, 5);
         },
         insertUnderline() {
             // 下划线
             const point = this.getCursortPosition();
-            const lastChart = this.currentValue.substring(point - 1, point);
-            this.insertContent('<u></u>');
-            if (lastChart !== '\n' && this.currentValue !== '') {
-                this.setCaretPosition(point + 3);
-            } else {
-                this.setCaretPosition(point + 5);
-            }
+            const cursorSwitch = this.insertContent('<u></u>');
+            this.setCaretBySwitch(cursorSwitch, point, 3);
         },
         insertOverline() {
             // overline
             const point = this.getCursortPosition();
-            const lastChart = this.currentValue.substring(point - 1, point);
-            this.insertContent('~~~~');
-            if (lastChart !== '\n' && this.currentValue !== '') {
-                this.setCaretPosition(point + 2);
-            } else {
-                this.setCaretPosition(point + 2);
-            }
+            const cursorSwitch = this.insertContent('~~~~');
+            this.setCaretBySwitch(cursorSwitch, point, 2);
         },
         insertTitle(level) {
             // 插入标题
